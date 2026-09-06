@@ -23,6 +23,7 @@ export default function HomePage() {
   const [geoMsg, setGeoMsg] = useState('');
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<QualResult | null>(null);
+  const [ts] = useState(() => Date.now());
 
   function useGps() {
     setGeoMsg('Rilevamento posizione…');
@@ -66,10 +67,11 @@ export default function HomePage() {
     setLoading(true);
     setResult(null);
     try {
+      const website = (document.querySelector('input[name="website"]') as HTMLInputElement)?.value || '';
       const res = await fetch('/api/leads', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ prompt, lat, lon, name, phone, email, privacy }),
+        body: JSON.stringify({ prompt, lat, lon, name, phone, email, privacy, website, _ts: ts }),
       });
       const data = (await res.json()) as QualResult;
       setResult(data);
@@ -134,6 +136,8 @@ export default function HomePage() {
             <input type="checkbox" checked={privacy} onChange={(e) => setPrivacy(e.target.checked)} required />
             Accetto la Privacy Policy e il trasferimento dei miei dati al partner assegnato per essere ricontattato.
           </label>
+          {/* Honeypot professionale: invisibile all'umano, letale per bot */}
+          <input type="text" name="website" autoComplete="off" tabIndex={-1} aria-hidden="true" style={{ position: 'absolute', left: -9999 }} defaultValue="" />
           <div style={{ marginTop: 16 }}>
             <button className="btn" disabled={loading || lat === null}>
               {loading ? 'Invio…' : 'Trova professionista'}

@@ -1,9 +1,14 @@
 import { NextResponse } from 'next/server';
 import { getSupabaseServer } from '@/lib/supabase';
 
-// Webhook Telegram: gestisce callback "Accetta lead" (accept:<leadId>)
+// Webhook Telegram: solo Telegram può chiamarlo (secret header) — senza, chiunque accetta lead al posto tuo
 export async function POST(req: Request) {
   try {
+    const secret = process.env.TELEGRAM_WEBHOOK_SECRET || '';
+    if (secret) {
+      const got = req.headers.get('x-telegram-bot-api-secret-token') || '';
+      if (got !== secret) return NextResponse.json({ ok: true });
+    }
     const update = await req.json();
     const cb = update?.callback_query;
     if (!cb?.data) return NextResponse.json({ ok: true });

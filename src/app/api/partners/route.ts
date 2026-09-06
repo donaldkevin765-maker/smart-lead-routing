@@ -50,7 +50,13 @@ export async function POST(req: Request) {
       })
       .select('id')
       .single();
-    if (error || !data) throw new Error(error?.message || 'Creazione fallita');
+    if (error) {
+      // WHY professionale: email duplicata = messaggio chiaro, non stack trace per hacker
+      if (error.message.includes('idx_partners_email_unique') || error.message.includes('duplicate'))
+        return NextResponse.json({ success: false, error: 'Email già registrata' }, { status: 409 });
+      throw new Error('Creazione non disponibile');
+    }
+    if (!data) return NextResponse.json({ success: false, error: 'Creazione non disponibile' }, { status: 500 });
     return NextResponse.json({ success: true, id: (data as { id: string }).id });
   } catch (e) {
     return NextResponse.json({ success: false, error: (e as Error).message }, { status: 500 });

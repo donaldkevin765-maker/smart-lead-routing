@@ -4,29 +4,33 @@ import { matchPartners, buildTimeoutDate } from '@/lib/matching';
 import { getSupabaseServer } from '@/lib/supabase';
 import { sendLeadNotification, telegramConfigured } from '@/lib/telegram';
 import { sendEmail, resendConfigured, leadConfirmationHtml, partnerNotificationHtml } from '@/lib/resend';
+import { leadSchema, isHoneypot, isRateLimited } from '@/lib/validation';
 
 const SITE = process.env.NEXT_PUBLIC_SITE_URL || '';
 
 export async function POST(req: Request) {
   try {
+    // WHY: IP per rate limit — x-forwarded-for è l'unico dato affidabile su Vercel
+    const ip = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown';
+    if (isRateLimited(`ip:${ip}`, 10, 60 * 60 * 1000))
+      return NextResponse.json({ success: false, error: 'Troppe richieste, riprova tra un ora' }, { status: 429 });
+
     const body = await req.json();
-    const { prompt, lat, lon, name, phone, email, privacy } = body as {
-      prompt?: string;
-      lat?: number;
-      lon?: number;
-      name?: string;
-      phone?: string;
-      email?: string;
-      privacy?: boolean;
-    };
-    if (!prompt || typeof prompt !== 'string' || prompt.trim().length < 3)
-      return NextResponse.json({ success: false, error: 'Descrivi la richiesta' }, { status: 400 });
-    if (typeof lat !== 'number' || typeof lon !== 'number')
-      return NextResponse.json({ success: false, error: 'Posizione mancante' }, { status: 400 });
-    if (!name || !phone)
-      return NextResponse.json({ success: false, error: 'Nome e telefono richiesti' }, { status: 400 });
-    if (!privacy)
-      return NextResponse.json({ success: false, error: 'Devi accettare la privacy' }, { status: 400 });
+
+    // WHY honeypot/timing prima di Zod: scarta bot senza consumare Gemini/DB
+    const hp = isHoneypot(body as { website?: string; _ts?: number });
+    if (hp) return NextResponse.json({ success: false, error: 'Richiesta non valida' }, { status: 400 });
+
+    // WHY Zod: un solo punto di verità per validazione — leggibile e professionale
+    const parsed = leadSchema.safeParse(body);
+    if (!parsed.success)
+      return NextResponse.json({ success: false, error: parsed.error.issues[0].message }, { status: 400 });
+    const { prompt, lat, lon, name, phone, email } = parsed.data;
+
+    // Rate limit per telefono — anti dedup/flood mirato
+    const phoneKey = phone.replace(/\s/g, '');
+    if (isRateLimited(`phone:${phoneKey}`, 1, 30 * 60 * 1000))
+      return NextResponse.json({ success: false, error: 'Hai già una richiesta attiva, riprova tra 30 minuti' }, { status: 429 });
 
     const q = await qualifyLead(prompt.trim());
     const sb = getSupabaseServer();
@@ -103,8 +107,9 @@ export async function POST(req: Request) {
       qualification: q,
       assigned: { name: best.partner_name, distanceKm: best.distance_km },
     });
-  } catch (e) {
-    return NextResponse.json({ success: false, error: (e as Error).message }, { status: 500 });
+  } catch {
+    // WHY generico: non esporre dettagli DB/Gemini a chi sonda
+    return NextResponse.json({ success: false, error: 'Servizio temporaneamente non disponibile' }, { status: 500 });
   }
 }
 
@@ -115,9 +120,9 @@ export async function GET(req: Request) {
     if (!id) return NextResponse.json({ success: false, error: 'id richiesto' }, { status: 400 });
     const sb = getSupabaseServer();
     const { data, error } = await sb.from('leads').select('id,status,extracted_service,urgency_level,summary,created_at').eq('id', id).single();
-    if (error) throw new Error(error.message);
+    if (error) return NextResponse.json({ success: false, error: 'Non disponibile' }, { status: 404 });
     return NextResponse.json({ success: true, lead: data });
-  } catch (e) {
-    return NextResponse.json({ success: false, error: (e as Error).message }, { status: 500 });
+  } catch {
+    return NextResponse.json({ success: false, error: 'Non disponibile' }, { status: 500 });
   }
 }
