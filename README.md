@@ -49,3 +49,12 @@ npm run dev
 3. **Rating a media mobile** (`(vecchio+nuovo)/2`): semplice, anti-spike da singola recensione; con volumi alti si passa a media pesata.
 4. **Degrado grazioso**: Telegram/Resend assenti → il lead viene comunque assegnato e gestito da dashboard (notifiche = best-effort, mai bloccanti).
 5. **Cron ogni 5 min, timeout 15 min**: il ritardo max di riassegnazione è 5 min; granularità minore costerebbe esecuzioni Vercel senza benefici.
+
+## Produzione (live 2026-09-06)
+- Sito: https://smart-lead-routing.vercel.app
+- Repo: https://github.com/donaldkevin765-maker/smart-lead-routing
+- Waterfall: GitHub Actions ogni 5 min (Vercel Hobby = solo cron giornalieri) + rete sicurezza giornaliera Vercel.
+
+## Da completare (richiedono azione umana)
+1. **Telegram**: nessun token sul PC → crearlo con @BotFather su Telegram (`/newbot`), poi `TELEGRAM_BOT_TOKEN` in `.env.local` + env Vercel + webhook: `https://api.telegram.org/bot<TOKEN>/setWebhook?url=https://smart-lead-routing.vercel.app/api/telegram/webhook`. Senza: notifiche solo via dashboard (degrado previsto).
+2. **Resend**: la chiave trovata sul PC risulta invalida → generarne una nuova su resend.com/api-keys, poi `RESEND_API_KEY` in `.env.local` + env Vercel. Senza: email saltate, lead comunque assegnati (degrado previsto).
