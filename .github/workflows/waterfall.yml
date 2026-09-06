@@ -1,0 +1,16 @@
+name: Waterfall check (ogni 5 min)
+
+# LOGICA: Vercel Hobby permette solo cron giornalieri → il waterfall a 5 minuti gira
+# qui (gratis). Chiama lo stesso endpoint del cron Vercel con CRON_SECRET.
+on:
+  schedule:
+    - cron: "*/5 * * * *"
+  workflow_dispatch:
+
+jobs:
+  check-timeouts:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger waterfall
+        run: |
+          curl -s -m 60 "${{ secrets.SITE_URL }}/api/cron/check-timeouts?secret=${{ secrets.CRON_SECRET }}"
