@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { SERVICE_CATALOG } from '@/lib/types';
 
 interface PartnerRow {
   id: string;
@@ -19,6 +18,7 @@ interface PartnerRow {
 
 export default function PartnerPage() {
   const [partners, setPartners] = useState<PartnerRow[]>([]);
+  const [grouped, setGrouped] = useState<Record<string, Record<string, { slug: string; label: string }[]>>>({});
   const [msg, setMsg] = useState('');
   const [form, setForm] = useState({
     name: '',
@@ -40,9 +40,15 @@ export default function PartnerPage() {
     const data = await res.json();
     if (data.success) setPartners(data.partners);
   }
+  async function loadServices() {
+    const r = await fetch('/api/services');
+    const j = await r.json();
+    if (j.success) setGrouped(j.grouped);
+  }
 
   useEffect(() => {
     load();
+    loadServices();
     const params = new URLSearchParams(window.location.search);
     const l = params.get('lead');
     if (l) setLeadId(l);
@@ -154,15 +160,30 @@ export default function PartnerPage() {
               <input className="input" value={form.telegram_chat_id} onChange={(e) => setForm({ ...form, telegram_chat_id: e.target.value })} placeholder="Da @userinfobot" />
             </div>
           </div>
-          <label className="label">Servizi offerti</label>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
-            {SERVICE_CATALOG.map((s) => (
-              <label key={s} className={form.services.includes(s) ? 'chip on' : 'chip'}>
-                <input type="checkbox" checked={form.services.includes(s)} onChange={() => toggleService(s)} style={{ marginRight: 6 }} />
-                {s}
-              </label>
-            ))}
-          </div>
+          <label className="label">Servizi offerti (da catalogo multi-settore)</label>
+          {Object.keys(grouped).length === 0 ? (
+            <p className="muted">Caricamento catalogo…</p>
+          ) : (
+            Object.entries(grouped).map(([vertical, cats]) => (
+              <div key={vertical} style={{ marginBottom: 10 }}>
+                <p className="muted" style={{ textTransform: 'capitalize', fontWeight: 600, margin: '10px 0 6px' }}>{vertical}</p>
+                {Object.entries(cats).map(([cat, list]) => (
+                  <div key={cat} style={{ marginBottom: 6 }}>
+                    <span className="muted" style={{ fontSize: 12 }}>{cat}: </span>
+                    <span style={{ display: 'inline-flex', flexWrap: 'wrap', gap: 6 }}>
+                      {list.map((s) => (
+                        <label key={s.slug} className={form.services.includes(s.slug) ? 'chip on' : 'chip'}>
+                          <input type="checkbox" checked={form.services.includes(s.slug)} onChange={() => toggleService(s.slug)} style={{ marginRight: 6 }} />
+                          {s.label}
+                        </label>
+                      ))}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            ))
+          )}
+
           <div className="row">
             <div>
               <label className="label">Latitudine sede</label>
