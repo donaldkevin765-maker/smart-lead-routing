@@ -123,7 +123,7 @@ export default function PartnerPage() {
           <button className="btn" onClick={accept}>Accetta lead</button>
         </div>
         {contact && (
-          <div style={{ marginTop: 12, background: '#0b1327', padding: 12, borderRadius: 10 }}>
+          <div className="contact-box">
             <p><strong>{contact.user_name}</strong> — {contact.user_phone} {contact.user_email ? `— ${contact.user_email}` : ''}</p>
             <p className="muted">{contact.extracted_service} [{contact.urgency_level}] — {contact.summary}</p>
             <p style={{ fontSize: 14 }}>{contact.raw_prompt}</p>
@@ -157,7 +157,7 @@ export default function PartnerPage() {
           <label className="label">Servizi offerti</label>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
             {SERVICE_CATALOG.map((s) => (
-              <label key={s} style={{ fontSize: 14, background: form.services.includes(s) ? '#164e63' : '#0b1327', padding: '6px 10px', borderRadius: 999, cursor: 'pointer' }}>
+              <label key={s} className={form.services.includes(s) ? 'chip on' : 'chip'}>
                 <input type="checkbox" checked={form.services.includes(s)} onChange={() => toggleService(s)} style={{ marginRight: 6 }} />
                 {s}
               </label>
@@ -205,8 +205,8 @@ export default function PartnerPage() {
                   <td>{p.coverage_radius_km} km</td>
                   <td>{p.rating}</td>
                   <td>{p.leads_today}/{p.max_daily_leads}</td>
-                  <td>{p.is_active ? 'attivo' : 'inattivo'}</td>
-                  <td><button className="btn" onClick={() => toggleActive(p)}>{p.is_active ? 'Disattiva' : 'Attiva'}</button></td>
+                  <td><span className={p.is_active ? 'status on' : 'status off'}>{p.is_active ? 'attivo' : 'inattivo'}</span></td>
+                  <td><button className="btn btn-secondary" onClick={() => toggleActive(p)}>{p.is_active ? 'Disattiva' : 'Attiva'}</button></td>
                 </tr>
               ))}
             </tbody>

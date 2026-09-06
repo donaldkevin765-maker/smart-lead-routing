@@ -82,11 +82,12 @@ export default function HomePage() {
 
   return (
     <div>
+      <div className="hero">
+        <span className="hero-eyebrow">Qualifica AI · Geo-match · Waterfall 15 min</span>
+        <h1>Il professionista giusto, vicino a te.</h1>
+        <p>Descrivi il problema in parole tue. Troviamo lo specialista più vicino e disponibile.</p>
+      </div>
       <div className="card">
-        <h1 style={{ margin: '0 0 8px' }}>Descrivi il problema, troviamo il professionista più vicino</h1>
-        <p className="muted" style={{ marginTop: 0 }}>
-          Qualifica AI gratuita (Gemini) + geo-match PostGIS. Notifica al partner in tempo reale, riassegnazione automatica se non risponde entro 15 minuti.
-        </p>
         <form onSubmit={submit}>
           <label className="label" htmlFor="prompt">Richiesta in testo libero</label>
           <textarea
@@ -110,7 +111,7 @@ export default function HomePage() {
               <label className="label" htmlFor="city">oppure Città / CAP</label>
               <div style={{ display: 'flex', gap: 8 }}>
                 <input id="city" className="input" value={city} onChange={(e) => setCity(e.target.value)} placeholder="Es. Monza 20900" />
-                <button type="button" className="btn" onClick={geocodeCity}>Cerca</button>
+                <button type="button" className="btn btn-secondary" onClick={geocodeCity}>Cerca</button>
               </div>
               {lat !== null && lon !== null && (
                 <p className="muted" style={{ fontSize: 13 }}>Coordinate: {lat.toFixed(4)}, {lon.toFixed(4)}</p>
@@ -145,7 +146,7 @@ export default function HomePage() {
       {result && (
         <div className="card" style={{ marginTop: 16 }}>
           {!result.success ? (
-            <p style={{ color: '#ff8a8a' }}>Errore: {result.error}</p>
+            <p className="error">Errore: {result.error}</p>
           ) : (
             <div>
               <h3 style={{ marginTop: 0 }}>Richiesta registrata</h3>
