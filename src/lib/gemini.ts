@@ -6,9 +6,14 @@ function getModel() {
   const apiKey = process.env.GEMINI_API_KEY || '';
   if (!apiKey) throw new Error('GEMINI_API_KEY mancante');
   const genAI = new GoogleGenerativeAI(apiKey);
-  return genAI.getGenerativeModel({ model: 'gemini-2.5-flash' });
+  // gemini-2.5-flash ritirato (404) → unico free funzionante: 3.1-flash-lite-preview
+  return genAI.getGenerativeModel({ model: 'gemini-3.1-flash-lite-preview' });
 }
 
+// LOGICA FALLBACK: se GEMINI_API_KEY manca o l'API fallisce, la qualifica avviene
+// con keyword locali (mai bloccare la raccolta lead per un guasto AI). Il fallback
+// distingue urgenza alta (perdita/gas/blocco) da bassa (preventivo/manutenzione) e
+// mappa il servizio dal catalogo. Precisione minore, ma zero lead persi.
 function fallbackQualify(prompt: string): Qualification {
   const lower = prompt.toLowerCase();
   let service = 'generico';

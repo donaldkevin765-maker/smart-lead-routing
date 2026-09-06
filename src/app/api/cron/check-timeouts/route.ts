@@ -6,6 +6,10 @@ import { sendEmail, resendConfigured, partnerNotificationHtml } from '@/lib/rese
 
 export const dynamic = 'force-dynamic';
 
+// LOGICA EWKB: PostgREST/Supabase-JS restituisce le colonne GEOGRAPHY come stringa
+// esadecimale EWKB ("0101000020..."), NON come WKT né GeoJSON. Il parser sotto gestisce
+// tutti e 3 i formati perché il formato dipende dal client usato (SQL diretto = WKT,
+// REST = EWKB). Se un giorno Supabase cambia formato, il cron continua a funzionare.
 function parseEwkbPoint(hex: string): [number, number] | null {
   try {
     const buf = Buffer.from(hex, 'hex');

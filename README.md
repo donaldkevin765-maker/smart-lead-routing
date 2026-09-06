@@ -3,7 +3,7 @@
 Raccolta richieste → qualifica AI (Gemini free) → geo-match PostGIS → notifica Telegram/Email → waterfall 15 min → valutazione.
 
 ## Stack gratuito
-- **AI**: Gemini `gemini-2.5-flash` (fallback keyword se chiave assente)
+- **AI**: Gemini `gemini-3.1-flash-lite-preview` (unico modello free che risponde 200 su questa chiave; `gemini-2.5-flash` ritirato → 404) + fallback keyword se chiave assente
 - **DB/Geo**: Supabase Free Tier + PostGIS (`kbwaolqwdhswgkicbzmx`)
 - **Cron**: Vercel Cron ogni 5 min (`vercel.json`)
 - **Notifiche**: Telegram Bot API + Resend (3.000 email/mese free)
@@ -42,3 +42,10 @@ npm run dev
 - PostgREST restituisce `GEOGRAPHY` in **EWKB hex** → parser `parseEwkbPoint` nel cron (non WKT/GeoJSON).
 - Management API Supabase: serve header `User-Agent: Mozilla/5.0` o 403 Cloudflare.
 - Email `from` riusa dominio verificato `shop-brianza.com` su Resend.
+
+## Logiche di progetto (perché è fatto così)
+1. **Notifica anonimizzata**: il partner vede guasto/urgenza/distanza ma NON i contatti finché non accetta → privacy GDPR + anti-scavalcamento (il cliente non viene contattato da chi non si impegna).
+2. **Waterfall 15 min con excluded[]**: ogni tentativo scaduto esclude quel partner nel giro dopo → niente loop sullo stesso inattivo, niente lead persi.
+3. **Rating a media mobile** (`(vecchio+nuovo)/2`): semplice, anti-spike da singola recensione; con volumi alti si passa a media pesata.
+4. **Degrado grazioso**: Telegram/Resend assenti → il lead viene comunque assegnato e gestito da dashboard (notifiche = best-effort, mai bloccanti).
+5. **Cron ogni 5 min, timeout 15 min**: il ritardo max di riassegnazione è 5 min; granularità minore costerebbe esecuzioni Vercel senza benefici.

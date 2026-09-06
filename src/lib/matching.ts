@@ -1,6 +1,11 @@
 import type { MatchedPartner } from './types';
 import { getSupabaseServer } from './supabase';
 
+// LOGICA SCORING (perché questi pesi):
+// - Distanza 40%: il cliente vuole il professionista più vicino (meno attesa).
+// - Rating 40%: la qualità storica pesa quanto la distanza (un vicino scarso < un bravo a 5km).
+// - Carico 20%: evita di intasare chi è già pieno (max_daily_leads), distribuisce il lavoro.
+// Formula speculare nella funzione SQL match_smart_partners — modificarle insieme.
 export async function matchPartners(
   lat: number,
   lon: number,
