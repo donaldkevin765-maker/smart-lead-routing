@@ -38,6 +38,11 @@ export default function AdminVerticals() {
 
   return (
     <div>
+      <div className="card" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <span className="muted"><a href="/admin/partners">→ Vai a Sala controllo partner</a> · <a href="/admin/verticals">Verticali</a></span>
+        <span className="muted" style={{ fontSize: 12 }}>Admin — solo per te</span>
+      </div>
+
       <div className="card">
         <h2 style={{ marginTop: 0 }}>Verticali & Servizi (punto 4 — multi-settore)</h2>
         <p className="muted">Aggiungere un settore = 1 riga qui. Gemini, match e chip partner si aggiornano da soli — zero codice.</p>
