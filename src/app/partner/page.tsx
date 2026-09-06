@@ -113,6 +113,24 @@ export default function PartnerPage() {
 
   return (
     <div>
+      <div className="hero" style={{ padding: '32px 0 8px' }}>
+        <span className="hero-eyebrow">Per aziende — clienti vicini, senza impegno per chi cerca</span>
+        <h1 style={{ fontSize: 'clamp(28px,4vw,40px)' }}>Ricevi clienti che ti cercano già.</h1>
+        <p className="muted" style={{ textAlign: 'center', maxWidth: 640, margin: '0 auto' }}>
+          Chi ha un problema descrive con parole sue cosa gli serve. Tu ricevi solo richieste filtrate, vicine e pronte — accetti in 1 click, paghi solo se accetti.
+        </p>
+      </div>
+
+      <div className="card">
+        <h3 style={{ marginTop: 0 }}>Come funziona per te</h3>
+        <div className="row" style={{ fontSize: 15 }}>
+          <div>1. <strong>Ti registri</strong> con servizi e zona (2 min).</div>
+          <div>2. <strong>Ricevi notifica</strong> anonima su Telegram/Email.</div>
+          <div>3. <strong>Accetti</strong> → sblocchi nome e telefono e chiami.</div>
+        </div>
+        <p className="muted" style={{ fontSize: 13, marginBottom: 0 }}>Chi cerca non vede questa pagina — vede solo "Descrivi il problema". Questa è solo per te che offri il servizio.</p>
+      </div>
+
       <div className="card">
         <h2 style={{ marginTop: 0 }}>Accetta lead assegnato</h2>
         <div className="row">
