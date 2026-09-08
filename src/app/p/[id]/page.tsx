@@ -15,7 +15,7 @@ export default async function PartnerPage({ params }: { params: Promise<{ id: st
   const sb = getSupabaseServer();
   const { data } = await sb.from('partners').select('*').eq('id', id).single();
   const p = data as {
-    id: string; name: string; email: string; phone: string; services_offered: string[]; rating: number; is_verified: boolean; credits: number; coverage_radius_km: number; created_at: string; availability: Record<string, string[]> | null;
+    id: string; name: string; email: string; phone: string; services_offered: string[]; rating: number; is_verified: boolean; credits: number; coverage_radius_km: number; created_at: string; availability: Record<string, string[]> | null; location: string;
   } | null;
   if (!p) notFound();
 
@@ -99,9 +99,26 @@ export default async function PartnerPage({ params }: { params: Promise<{ id: st
             <p className="muted" style={{ fontSize: 14, margin: 0 }}>Copre {p.coverage_radius_km}km da Monza · Orari da verificare</p>
           )}
           <p className="muted" style={{ fontSize: 11, marginTop: 8 }}>Fonte: sito ufficiale / reception — verificato STROBE</p>
-          <div style={{ marginTop: 12, background: '#f5f5f7', borderRadius: 12, height: 100, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <span className="muted" style={{ fontSize: 12 }}>Mappa {p.coverage_radius_km}km da Monza</span>
-          </div>
+          {/* MAPS gratuita — OpenStreetMap, clicchi e apri mappa grande */}
+          {(() => {
+            // location è EWKB hex "0101000020E610..." — parser come in cron
+            let lat = 45.584, lon = 9.274;
+            try {
+              const hex = p.location as unknown as string;
+              if (hex && hex.startsWith('0101')) {
+                const buf = Buffer.from(hex, 'hex');
+                lon = buf.readDoubleLE(9);
+                lat = buf.readDoubleLE(17);
+              }
+            } catch {}
+            const bbox = `${lon - 0.01},${lat - 0.01},${lon + 0.01},${lat + 0.01}`;
+            return (
+              <a href={`https://www.openstreetmap.org/?mlat=${lat}&mlon=${lon}#map=15/${lat}/${lon}`} target="_blank" rel="noopener" style={{ display: 'block', marginTop: 12, borderRadius: 12, overflow: 'hidden', border: '1px solid var(--card-border)' }}>
+                <iframe title="Mappa" width="100%" height="160" style={{ border: 0, display: 'block' }} loading="lazy" src={`https://www.openstreetmap.org/export/embed.html?bbox=${bbox}&layer=mapnik&marker=${lat},${lon}`} />
+                <div style={{ background: '#f5f5f7', padding: '6px 10px', fontSize: 12, color: 'var(--muted)', textAlign: 'center' }}>Clicca per aprire MAPS a schermo intero — totalmente gratuito</div>
+              </a>
+            );
+          })()}
           <p className="muted" style={{ fontSize: 11, marginTop: 8 }}>Verificato il {new Date(p.created_at).toLocaleDateString('it-IT')}</p>
         </div>
       </div>
