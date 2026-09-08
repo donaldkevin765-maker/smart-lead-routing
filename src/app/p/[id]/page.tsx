@@ -80,8 +80,10 @@ export default async function PartnerPage({ params }: { params: Promise<{ id: st
             <div><span className="muted">Disponibilità</span><br /><strong>Verificata STROBE · {p.credits} crediti</strong></div>
           </div>
           <div style={{ marginTop: 16 }}>
-            <a className="btn" href={`/?prompt=${encodeURIComponent(p.services_offered[0] + ' a Monza')}&partner=${p.id}`}>Contatta tramite STROBE — redirect immediato</a>
-            <p className="muted" style={{ fontSize: 12, marginTop: 8 }}>Pagina sotto STROBE con standard unico. Al click parti con waterfall: se occupato, ti reindirizziamo subito al migliore vicino.</p>
+            <a href={`/?prompt=${encodeURIComponent(p.services_offered[0] + ' a Monza')}&partner=${p.id}`} style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: '#111', color: '#fff', padding: '12px 20px', borderRadius: 999, fontSize: 14, fontWeight: 600, textDecoration: 'none', letterSpacing: '-0.01em' }}>
+              Contatta tramite STROBE <span style={{ opacity: 0.6 }}>→</span>
+            </a>
+            <p className="muted" style={{ fontSize: 12, marginTop: 8 }}>Redirect immediato via STROBE — se occupato, al migliore vicino.</p>
           </div>
         </div>
 
