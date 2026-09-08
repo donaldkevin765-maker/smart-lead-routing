@@ -40,7 +40,7 @@ export default function ProblemiIndex() {
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 12 }}>
             {list.map((e) => (
               <a key={e.slug} href={`/problemi/${e.slug}`} style={{ textDecoration: 'none', color: 'var(--text)', display: 'block', background: '#fff', borderRadius: 16, border: '1px solid var(--card-border)', overflow: 'hidden' }}>
-                <img src={`https://picsum.photos/seed/${e.coverSeed}/600/340?blur=2`} alt="" width={600} height={340} style={{ width: '100%', height: 160, objectFit: 'cover', display: 'block' }} loading="lazy" />
+                <img src={`https://picsum.photos/seed/${e.gallery[0]}/600/340?blur=2`} alt="" width={600} height={340} style={{ width: '100%', height: 160, objectFit: 'cover', display: 'block' }} loading="lazy" />
                 <div style={{ padding: '10px 12px' }}>
                   <strong style={{ display: 'block', fontSize: 15, lineHeight: 1.3 }}>{e.h1}</strong>
                   <span className="muted" style={{ display: 'block', fontSize: 13, marginTop: 4 }}>{e.intro.slice(0, 90)}…</span>

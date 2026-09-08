@@ -11,13 +11,13 @@ type Esca = {
   quandoChiamare: string;
   fasciaPrezzo: string;
   faq: { q: string; a: string }[];
-  coverSeed: string;
+  gallery: string[];
 };
 
 const ESCHE: Esca[] = [
   {
     slug: 'caldaia-bloccata-monza',
-    coverSeed: 'strobe-caldaia',
+    gallery: ['strobe-caldaia-1', 'strobe-caldaia-2', 'strobe-caldaia-3'],
     title: 'Caldaia bloccata a Monza: errore E35, cosa fare subito',
     h1: 'Caldaia bloccata a Monza — errore E35 e perdita',
     service: 'caldaia',
@@ -36,7 +36,7 @@ const ESCHE: Esca[] = [
   },
   {
     slug: 'perdita-acqua-sotto-lavello-monza',
-    coverSeed: 'strobe-idraulica',
+    gallery: ['strobe-idraulica-1', 'strobe-idraulica-2', 'strobe-idraulica-3'],
     title: 'Perdita acqua sotto lavello a Monza: cosa fare',
     h1: 'Perdita acqua sotto il lavello a Monza',
     service: 'idraulica',
@@ -54,7 +54,7 @@ const ESCHE: Esca[] = [
   },
   {
     slug: 'palestra-con-sauna-monza',
-    coverSeed: 'strobe-palestra',
+    gallery: ['strobe-trainer-primo-piano', 'strobe-cliente-primo-piano', 'strobe-palestra-3'],
     title: 'Palestra con sauna a Monza: prova vicino a te',
     h1: 'Palestra con sauna a Monza',
     service: 'palestra',
@@ -72,7 +72,7 @@ const ESCHE: Esca[] = [
   },
   {
     slug: 'parrucchiere-donna-monza',
-    coverSeed: 'strobe-parrucchiere',
+    gallery: ['strobe-parrucchiere-1', 'strobe-parrucchiere-2', 'strobe-parrucchiere-3'],
     title: 'Parrucchiere donna a Monza: taglio e colore',
     h1: 'Parrucchiere donna a Monza',
     service: 'parrucchiere',
@@ -87,7 +87,7 @@ const ESCHE: Esca[] = [
   },
   {
     slug: 'pulizie-casa-monza',
-    coverSeed: 'strobe-pulizie',
+    gallery: ['strobe-pulizie-1', 'strobe-pulizie-2', 'strobe-pulizie-3'],
     title: 'Pulizie casa a Monza: domestica e condominio',
     h1: 'Pulizie casa a Monza',
     service: 'pulizie',
@@ -102,7 +102,7 @@ const ESCHE: Esca[] = [
   },
   {
     slug: 'trasloco-monza-brianza',
-    coverSeed: 'strobe-trasloco',
+    gallery: ['strobe-trasloco-1', 'strobe-trasloco-2', 'strobe-trasloco-3'],
     title: 'Trasloco a Monza e Brianza: preventivo veloce',
     h1: 'Trasloco a Monza e Brianza',
     service: 'traslochi',
@@ -117,7 +117,7 @@ const ESCHE: Esca[] = [
   },
   {
     slug: 'elettricista-monza-urgenza',
-    coverSeed: 'strobe-elettricista',
+    gallery: ['strobe-elettricista-1', 'strobe-elettricista-2', 'strobe-elettricista-3'],
     title: 'Elettricista a Monza: corto e salvavita che salta',
     h1: 'Elettricista a Monza — salvavita che salta',
     service: 'elettricista',
@@ -132,7 +132,7 @@ const ESCHE: Esca[] = [
   },
   {
     slug: 'climatizzazione-monza',
-    coverSeed: 'strobe-clima',
+    gallery: ['strobe-clima-1', 'strobe-clima-2', 'strobe-clima-3'],
     title: 'Climatizzazione a Monza: installazione e ricarica',
     h1: 'Climatizzazione a Monza',
     service: 'climatizzazione',
@@ -147,7 +147,7 @@ const ESCHE: Esca[] = [
   },
   {
     slug: 'massaggi-decontratturante-monza',
-    coverSeed: 'strobe-massaggi',
+    gallery: ['strobe-massaggi-1', 'strobe-massaggi-2', 'strobe-massaggi-3'],
     title: 'Massaggi decontratturante a Monza',
     h1: 'Massaggi decontratturante a Monza',
     service: 'massaggi',
@@ -162,7 +162,7 @@ const ESCHE: Esca[] = [
   },
   {
     slug: 'giardinaggio-monza-potatura',
-    coverSeed: 'strobe-giardino',
+    gallery: ['strobe-giardino-1', 'strobe-giardino-2', 'strobe-giardino-3'],
     title: 'Giardinaggio a Monza: potatura e prato',
     h1: 'Giardinaggio a Monza — potatura e prato',
     service: 'giardinaggio',

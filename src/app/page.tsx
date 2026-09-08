@@ -113,13 +113,8 @@ export default function HomePage() {
         <span className="hero-eyebrow">Qualifica AI · Geo-match · Waterfall 15 min</span>
         <h1>Il professionista giusto, vicino a te.</h1>
         <p>Descrivi il problema in parole tue. Troviamo lo specialista più vicino e disponibile.</p>
-        {/* Foto anonimizzate — estetica premium, volti non riconoscibili, coerenti con 4 verticali */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 12, marginTop: 20 }}>
-          <img src="https://picsum.photos/seed/strobe-casa/400/280?blur=2" alt="" width={400} height={280} style={{ width: '100%', height: 140, objectFit: 'cover', borderRadius: 16, opacity: 0.92 }} loading="lazy" />
-          <img src="https://picsum.photos/seed/strobe-fitness/400/280?blur=2" alt="" width={400} height={280} style={{ width: '100%', height: 140, objectFit: 'cover', borderRadius: 16, opacity: 0.92 }} loading="lazy" />
-          <img src="https://picsum.photos/seed/strobe-benessere/400/280?blur=2" alt="" width={400} height={280} style={{ width: '100%', height: 140, objectFit: 'cover', borderRadius: 16, opacity: 0.92 }} loading="lazy" />
-        </div>
-        <p className="muted" style={{ fontSize: 11, marginTop: 6, letterSpacing: '0.04em' }}>Foto anonimizzate — estetica STROBE, nessun volto identificabile</p>
+        {/* SEO smart: parole chiave nell'URL → gallery già filtrata sul settore cercato */}
+        <p className="muted" style={{ fontSize: 12, marginTop: 8 }}>Prova SEO: <a href="/problemi/palestra-con-sauna-monza">palestra</a> · <a href="/problemi/caldaia-bloccata-monza">caldaia</a> · <a href="/problemi/parrucchiere-donna-monza">parrucchiere</a> — ogni pagina apre già il settore cercato</p>
       </div>
       <div className="card">
         <form onSubmit={submit}>

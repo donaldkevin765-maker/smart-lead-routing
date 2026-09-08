@@ -35,27 +35,21 @@ export default async function ProblemaPage({ params }: { params: Promise<{ slug:
       <div className="hero" style={{ padding: '24px 0 8px' }}>
         <span className="hero-eyebrow">{esca.city} · {esca.service}</span>
         <h1>{esca.h1}</h1>
-        {/* Cover anonimizzata — coerente con vertical, nessun volto */}
-        <img src={`https://picsum.photos/seed/${esca.coverSeed}/800/420?blur=2`} alt="" width={800} height={420} style={{ width: '100%', height: 220, objectFit: 'cover', borderRadius: 18, marginTop: 14, opacity: 0.94 }} loading="lazy" />
-        {/* Primo piano GRANDE entrambi — trainer + cliente, volti sfocati vicino alla scritta */}
-        {esca.slug === 'palestra-con-sauna-monza' && (
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 16, marginTop: 16 }}>
-            {[
-              { seed: 'strobe-trainer-primo-piano', label: 'Trainer — primo piano grande', sub: 'Volto anonimizzato, vicino alla scritta' },
-              { seed: 'strobe-cliente-primo-piano', label: 'Cliente — primo piano grande', sub: 'Primo piano sfocato, estetica STROBE' },
-            ].map((p) => (
-              <div key={p.seed} style={{ position: 'relative', borderRadius: 20, overflow: 'hidden', height: 420, background: '#eee' }}>
-                <img src={`https://picsum.photos/seed/${p.seed}/1200/900?blur=2`} alt="" width={1200} height={900} style={{ width: '100%', height: '100%', objectFit: 'cover' }} loading="lazy" />
-                {/* Blur mirato grande sul volto */}
-                <div style={{ position: 'absolute', top: '18%', left: '28%', width: '36%', height: '42%', backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)', borderRadius: 999, opacity: 0.96 }} />
-                <div style={{ position: 'absolute', bottom: 16, left: 16, right: 16, background: 'rgba(255,255,255,0.88)', backdropFilter: 'blur(14px)', borderRadius: 12, padding: '12px 14px', border: '1px solid rgba(0,0,0,0.06)' }}>
-                  <strong style={{ display: 'block', fontSize: 15, lineHeight: 1.2 }}>{p.label}</strong>
-                  <span style={{ fontSize: 12, color: 'var(--muted)' }}>{p.sub}</span>
-                </div>
+        {/* Galleria swipe — scorri a destra/sinistra, mostra solo foto relative al settore cercato (SEO keywords → gallery filtrata) */}
+        <div style={{ display: 'flex', gap: 12, overflowX: 'auto', scrollSnapType: 'x mandatory', WebkitOverflowScrolling: 'touch', scrollbarWidth: 'none', marginTop: 14, paddingBottom: 4 }}>
+          {esca.gallery.map((seed) => (
+            <div key={seed} style={{ position: 'relative', flex: '0 0 88%', scrollSnapAlign: 'start', borderRadius: 18, overflow: 'hidden', height: 320, background: '#eee' }}>
+              <img src={`https://picsum.photos/seed/${seed}/900/600?blur=2`} alt="" width={900} height={600} style={{ width: '100%', height: '100%', objectFit: 'cover' }} loading="lazy" />
+              {/* Blur volto + label settore vicino alla scritta */}
+              <div style={{ position: 'absolute', top: '16%', left: '30%', width: '32%', height: '40%', backdropFilter: 'blur(18px)', WebkitBackdropFilter: 'blur(18px)', borderRadius: 999, opacity: 0.96 }} />
+              <div style={{ position: 'absolute', bottom: 12, left: 12, right: 12, background: 'rgba(255,255,255,0.86)', backdropFilter: 'blur(12px)', borderRadius: 10, padding: '10px 12px', border: '1px solid rgba(0,0,0,0.06)' }}>
+                <strong style={{ fontSize: 13 }}>{esca.service} — {esca.city}</strong>
+                <span className="muted" style={{ fontSize: 11, marginLeft: 6 }}>primo piano, volto sfocato</span>
               </div>
-            ))}
-          </div>
-        )}
+            </div>
+          ))}
+        </div>
+        <p className="muted" style={{ fontSize: 11, marginTop: 6 }}>← scorri a destra/sinistra · foto relative a <strong>{esca.service}</strong> cercato</p>
         <p style={{ marginTop: 12 }}>{esca.intro}</p>
         <div style={{ marginTop: 16 }}>
           <a className="btn" href={href}>Trova professionista per questo — 1 click</a>
