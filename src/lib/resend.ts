@@ -18,7 +18,7 @@ export async function sendEmail(opts: { to: string; subject: string; html: strin
   if (!c) return false;
   try {
     const r = await c.emails.send({
-      from: 'Smart Lead Routing <noreply@shop-brianza.com>',
+      from: 'STROBE <noreply@shop-brianza.com>',
       to: opts.to,
       subject: opts.subject,
       html: opts.html,

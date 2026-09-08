@@ -1,4 +1,4 @@
-# Smart Lead Routing — Piattaforma Lead Geolocalizzati (0€/mese)
+# STROBE — Piattaforma Lead Geolocalizzati (0€/mese)
 
 Raccolta richieste → qualifica AI (Gemini free) → geo-match PostGIS → notifica Telegram/Email → waterfall 15 min → valutazione.
 
