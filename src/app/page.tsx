@@ -63,7 +63,7 @@ export default function HomePage() {
     }
   }
 
-  // WHY chat 2 turni: se Gemini è incerto (generico), 1 domanda di chiarimento prima di match = +20% precisione, senza 5 domande
+  // WHY chat 2 turni: se il servizio è incerto (generico), 1 domanda di chiarimento prima di match = +20% precisione, senza 5 domande
   async function qualifyFirst(): Promise<{ service: string; urgency: string } | null> {
     try {
       const r = await fetch('/api/qualify-lead', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ prompt }) });
@@ -110,7 +110,7 @@ export default function HomePage() {
   return (
     <div>
       <div className="hero">
-        <span className="hero-eyebrow">Qualifica AI · Geo-match · Waterfall 15 min</span>
+        <span className="hero-eyebrow">Geo-match · Routing istantaneo · Waterfall 15 min</span>
         <h1>Il professionista giusto, vicino a te.</h1>
         <p>Descrivi il problema in parole tue. Troviamo lo specialista più vicino e disponibile.</p>
         {/* SEO smart: parole chiave nell'URL → gallery già filtrata sul settore cercato */}

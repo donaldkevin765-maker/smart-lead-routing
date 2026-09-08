@@ -3,7 +3,7 @@ import './globals.css';
 
 export const metadata: Metadata = {
   title: 'STROBE — Il professionista giusto, vicino a te',
-  description: 'Descrivi il problema, troviamo il professionista più vicino. Qualifica AI e routing geolocalizzato.',
+  description: 'Descrivi il problema, troviamo il professionista più vicino. Routing geolocalizzato.',
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

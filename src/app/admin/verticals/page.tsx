@@ -45,7 +45,7 @@ export default function AdminVerticals() {
 
       <div className="card">
         <h2 style={{ marginTop: 0 }}>Verticali & Servizi (punto 4 — multi-settore)</h2>
-        <p className="muted">Aggiungere un settore = 1 riga qui. Gemini, match e chip partner si aggiornano da soli — zero codice.</p>
+        <p className="muted">Aggiungere un settore = 1 riga qui. Il sistema, il match e i chip partner si aggiornano da soli — zero codice.</p>
         <form onSubmit={add}>
           <div className="row">
             <div>
@@ -74,7 +74,7 @@ export default function AdminVerticals() {
               <input className="input" value={form.label} onChange={(e) => setForm({ ...form, label: e.target.value })} placeholder="es. Sauna" required />
             </div>
           </div>
-          <label className="label">Keywords per Gemini</label>
+          <label className="label">Parole chiave</label>
           <input className="input" value={form.keywords} onChange={(e) => setForm({ ...form, keywords: e.target.value })} placeholder="sauna bagno turco wellness" />
           <div style={{ marginTop: 12 }}><button className="btn" type="submit">Aggiungi servizio</button> <span className="muted">{msg}</span></div>
         </form>
