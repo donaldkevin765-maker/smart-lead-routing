@@ -5,8 +5,9 @@ export async function generateStaticParams() {
   return getEsche().map((e) => ({ slug: e.slug }));
 }
 
-export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
-  const esca = getEsca(params.slug);
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params;
+  const esca = getEsca(slug);
   if (!esca) return {};
   return {
     title: esca.title,
@@ -15,8 +16,9 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   };
 }
 
-export default function ProblemaPage({ params }: { params: { slug: string } }) {
-  const esca = getEsca(params.slug);
+export default async function ProblemaPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const esca = getEsca(slug);
   if (!esca) return <div className="card"><p>Pagina non trovata.</p></div>;
 
   const faqJsonLd = {
