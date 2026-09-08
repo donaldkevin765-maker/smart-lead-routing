@@ -15,7 +15,7 @@ export default async function PartnerPage({ params }: { params: Promise<{ id: st
   const sb = getSupabaseServer();
   const { data } = await sb.from('partners').select('*').eq('id', id).single();
   const p = data as {
-    id: string; name: string; email: string; phone: string; services_offered: string[]; rating: number; is_verified: boolean; credits: number; coverage_radius_km: number; created_at: string;
+    id: string; name: string; email: string; phone: string; services_offered: string[]; rating: number; is_verified: boolean; credits: number; coverage_radius_km: number; created_at: string; availability: Record<string, string[]> | null;
   } | null;
   if (!p) notFound();
 
@@ -85,12 +85,24 @@ export default async function PartnerPage({ params }: { params: Promise<{ id: st
         </div>
 
         <div className="card" style={{ marginTop: 0 }}>
-          <h3 style={{ marginTop: 0 }}>Orari & Zona</h3>
-          <p className="muted" style={{ fontSize: 14, margin: 0 }}>Copre {p.coverage_radius_km}km da Monza · Aperto secondo disponibilità verificata</p>
-          <div style={{ marginTop: 12, background: '#f5f5f7', borderRadius: 12, height: 120, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <span className="muted" style={{ fontSize: 12 }}>Mappa Monza Brianza — {p.coverage_radius_km}km</span>
+          <h3 style={{ marginTop: 0 }}>Orari & Zona — da canale ufficiale</h3>
+          {p.availability ? (
+            <div style={{ fontSize: 13, display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 6 }}>
+              {Object.entries(p.availability).map(([g, slots]) => (
+                <div key={g} style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid #f0f0f0', padding: '4px 0' }}>
+                  <span className="muted" style={{ textTransform: 'capitalize' }}>{g}</span>
+                  <strong>{(slots as string[]).join(', ')}</strong>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p className="muted" style={{ fontSize: 14, margin: 0 }}>Copre {p.coverage_radius_km}km da Monza · Orari da verificare</p>
+          )}
+          <p className="muted" style={{ fontSize: 11, marginTop: 8 }}>Fonte: sito ufficiale / reception — verificato STROBE</p>
+          <div style={{ marginTop: 12, background: '#f5f5f7', borderRadius: 12, height: 100, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <span className="muted" style={{ fontSize: 12 }}>Mappa {p.coverage_radius_km}km da Monza</span>
           </div>
-          <p className="muted" style={{ fontSize: 12, marginTop: 8 }}>Dati fondamentali verificati il {new Date(p.created_at).toLocaleDateString('it-IT')}</p>
+          <p className="muted" style={{ fontSize: 11, marginTop: 8 }}>Verificato il {new Date(p.created_at).toLocaleDateString('it-IT')}</p>
         </div>
       </div>
 
