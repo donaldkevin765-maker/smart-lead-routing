@@ -1,5 +1,6 @@
 import { notFound } from 'next/navigation';
 import { getSupabaseServer } from '@/lib/supabase';
+import PartnerContactBox from '@/components/PartnerContactBox';
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -122,6 +123,9 @@ export default async function PartnerPage({ params }: { params: Promise<{ id: st
           <p className="muted" style={{ fontSize: 11, marginTop: 8 }}>Verificato il {new Date(p.created_at).toLocaleDateString('it-IT')}</p>
         </div>
       </div>
+
+      {/* Spazio comunicazione — scrivi cosa ti serve, AI/bot categorizza in base a cosa gli serve */}
+      <PartnerContactBox partnerId={p.id} service={p.services_offered[0]} />
 
       {/* Altri simili a quello che cerchi — stessa struttura, stesso standard */}
       {simili.length > 0 && (
