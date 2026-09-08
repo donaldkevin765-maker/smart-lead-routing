@@ -14,6 +14,8 @@ export interface Partner {
   max_daily_leads: number;
   leads_today: number;
   is_active: boolean;
+  is_verified: boolean;
+  credits: number;
   created_at: string;
 }
 

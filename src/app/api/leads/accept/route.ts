@@ -28,8 +28,15 @@ export async function POST(req: Request) {
     if (!row || row.assigned_partner_id !== partnerId || row.status !== 'assigned')
       return NextResponse.json({ success: false, error: 'Lead non disponibile' }, { status: 409 });
 
+    // WHY credito: scala 1 solo se ha credito, altrimenti rifiuta — pay-per-lead professionale
+    const { data: partner } = await sb.from('partners').select('credits').eq('id', partnerId).single();
+    const credits = (partner as { credits: number } | null)?.credits ?? 0;
+    if (credits <= 0) return NextResponse.json({ success: false, error: 'Credito esaurito, ricarica per accettare' }, { status: 402 });
+
     await sb.from('leads').update({ status: 'accepted' }).eq('id', leadId).eq('status', 'assigned');
     await sb.from('lead_dispatch_attempts').update({ status: 'accepted', responded_at: new Date().toISOString() }).eq('lead_id', leadId).eq('partner_id', partnerId).eq('status', 'assigned');
+    await sb.from('partners').update({ credits: credits - 1 }).eq('id', partnerId);
+    await sb.from('partner_credit_ledger').insert({ partner_id: partnerId, delta: -1, reason: 'lead_accept', lead_id: leadId });
 
     const { data: full } = await sb.from('leads').select('user_name,user_phone,user_email,raw_prompt,summary,extracted_service,urgency_level').eq('id', leadId).single();
     return NextResponse.json({ success: true, contact: full });

@@ -5,6 +5,7 @@ import { getSupabaseServer } from './supabase';
 // - Distanza 40%: il cliente vuole il professionista più vicino (meno attesa).
 // - Rating 40%: la qualità storica pesa quanto la distanza (un vicino scarso < un bravo a 5km).
 // - Carico 20%: evita di intasare chi è già pieno (max_daily_leads), distribuisce il lavoro.
+// - Bonus verificato +5: professionale, senza rompere il live — verificato = più fiducia.
 // Formula speculare nella funzione SQL match_smart_partners — modificarle insieme.
 export async function matchPartners(
   lat: number,

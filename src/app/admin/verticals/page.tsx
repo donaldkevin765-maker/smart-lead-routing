@@ -38,8 +38,8 @@ export default function AdminVerticals() {
 
   return (
     <div>
-      <div className="card" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <span className="muted"><a href="/admin/partners">→ Vai a Sala controllo partner</a> · <a href="/admin/verticals">Verticali</a></span>
+      <div className="card" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 8 }}>
+        <span className="muted"><a href="/admin/partners">Partner</a> · <a href="/admin/verticals">Verticali</a> · <a href="/admin/leads">Audit trail</a></span>
         <span className="muted" style={{ fontSize: 12 }}>Admin — solo per te</span>
       </div>
 
