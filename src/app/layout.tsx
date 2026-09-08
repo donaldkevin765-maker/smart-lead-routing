@@ -24,10 +24,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           </div>
         </nav>
         <div className="container">{children}</div>
-        <footer style={{ borderTop: '1px solid var(--card-border)', marginTop: 48, padding: '20px 0', textAlign: 'center' }}>
-          <a href="https://shop-brianza.com" target="_blank" rel="noopener" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, textDecoration: 'none', color: 'var(--muted)', fontSize: 13 }}>
-            <img src="/shop-brianza.svg" alt="Shop Brianza" width={22} height={22} style={{ borderRadius: 6 }} />
-            Un progetto <strong style={{ color: 'var(--text-2)', fontWeight: 600 }}>Shop Brianza</strong> — azienda madre
+        {/* Footer tecnologico stile tarafab.ai — infrastruttura, senza fronzoli, solo mark */}
+        <footer style={{ borderTop: '1px solid var(--card-border)', marginTop: 64, padding: '32px 0', textAlign: 'center' }}>
+          <a href="https://shop-brianza.com" target="_blank" rel="noopener" aria-label="Shop Brianza" style={{ display: 'inline-flex', flexDirection: 'column', alignItems: 'center', gap: 8, textDecoration: 'none' }}>
+            <img src="/shop-brianza.svg" alt="" width={36} height={22} style={{ opacity: 0.85, filter: 'contrast(1.1)' }} />
+            <span style={{ fontSize: 10, letterSpacing: '0.22em', color: 'var(--muted)', fontWeight: 600 }}>SHOP BRIANZA</span>
           </a>
         </footer>
       </body>
