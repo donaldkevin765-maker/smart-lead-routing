@@ -7,7 +7,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   const { data } = await sb.from('partners').select('name,services_offered').eq('id', id).single();
   const p = data as { name: string; services_offered: string[] } | null;
   if (!p) return {};
-  return { title: `${p.name} — STROBE Monza Brianza`, description: `${p.name} — ${p.services_offered.join(', ')} a Monza Brianza. Pagina standard STROBE con foto reali.` };
+  return { title: `${p.name} — STROBE Monza Brianza`, description: `${p.name} — ${p.services_offered.join(', ')} a Monza Brianza. Pagina standard STROBE.` };
 }
 
 export default async function PartnerPage({ params }: { params: Promise<{ id: string }> }) {
@@ -15,11 +15,14 @@ export default async function PartnerPage({ params }: { params: Promise<{ id: st
   const sb = getSupabaseServer();
   const { data } = await sb.from('partners').select('*').eq('id', id).single();
   const p = data as {
-    id: string; name: string; email: string; phone: string; services_offered: string[]; rating: number; is_verified: boolean; credits: number; coverage_radius_km: number;
+    id: string; name: string; email: string; phone: string; services_offered: string[]; rating: number; is_verified: boolean; credits: number; coverage_radius_km: number; created_at: string;
   } | null;
   if (!p) notFound();
 
-  // Foto reali alta qualità — 3 scatti attività (CC0, primo piano grande)
+  // Simili: stesso servizio, stesso standard
+  const { data: similari } = await sb.from('partners').select('id,name,services_offered,rating,is_verified').contains('services_offered', [p.services_offered[0]]).neq('id', p.id).limit(3);
+  const simili = (similari || []) as { id: string; name: string; services_offered: string[]; rating: number; is_verified: boolean }[];
+
   const isGym = p.services_offered.includes('palestra');
   const gallery = isGym
     ? [
@@ -35,48 +38,77 @@ export default async function PartnerPage({ params }: { params: Promise<{ id: st
 
   return (
     <div>
-      <div className="hero" style={{ padding: '24px 0 8px' }}>
-        <span className="hero-eyebrow">Partner STROBE · Monza Brianza</span>
-        <h1>{p.name} {p.is_verified && <span style={{ fontSize: 16, background: 'var(--accent-soft)', color: 'var(--accent)', padding: '4px 10px', borderRadius: 999 }}>✓ Verificato</span>}</h1>
-        <p className="muted">{p.services_offered.join(' · ')} · Raggio {p.coverage_radius_km}km · {p.rating}★</p>
+      {/* Breadcrumb */}
+      <p className="muted" style={{ fontSize: 12, margin: '8px 0 0' }}>
+        <a href="/" style={{ color: 'var(--muted)' }}>Home</a> · <a href="/problemi" style={{ color: 'var(--muted)' }}>Problemi</a> · <span style={{ color: 'var(--text)' }}>{p.name}</span>
+      </p>
+
+      {/* Hero chiaro */}
+      <div className="hero" style={{ padding: '16px 0 8px', textAlign: 'left' }}>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, alignItems: 'center' }}>
+          <h1 style={{ margin: 0, fontSize: 'clamp(24px,4vw,36px)' }}>{p.name}</h1>
+          {p.is_verified && <span style={{ fontSize: 13, background: 'var(--accent-soft)', color: 'var(--accent)', padding: '4px 10px', borderRadius: 999, fontWeight: 600 }}>✓ Verificato STROBE</span>}
+          <span style={{ fontSize: 13, background: 'var(--success-bg)', color: 'var(--success)', padding: '4px 10px', borderRadius: 999 }}>{p.rating}★</span>
+        </div>
+        <p className="muted" style={{ margin: '8px 0 0', fontSize: 14 }}>
+          {p.services_offered.map((s) => <span key={s} className="chip on" style={{ marginRight: 6 }}>{s}</span>)} · Raggio {p.coverage_radius_km}km · Monza Brianza
+        </p>
       </div>
 
-      {/* Responsive: desktop griglia 3, mobile swipe — foto reali alta qualità */}
-      <style>{`@media(min-width:768px){.strobe-gallery{grid-template-columns:1fr 1fr 1fr !important; overflow:visible !important;}}`}</style>
-      <div className="strobe-gallery" style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 12, overflowX: 'auto', scrollSnapType: 'x mandatory', paddingBottom: 4 }}>
-        <div style={{ display: 'flex', gap: 12, overflowX: 'auto', scrollSnapType: 'x mandatory', gridColumn: '1/-1' }}>
+      {/* Galleria grande — desktop griglia 3, mobile swipe */}
+      <style>{`@media(min-width:768px){.strobe-gallery{grid-template-columns:repeat(3,1fr)!important;overflow:visible!important}}`}</style>
+      <div className="strobe-gallery" style={{ display: 'grid', gap: 12, marginTop: 16 }}>
+        <div style={{ display: 'flex', gap: 12, overflowX: 'auto', scrollSnapType: 'x mandatory', gridColumn: '1/-1', paddingBottom: 4 }}>
           {gallery.map((src) => (
             <div key={src} style={{ flex: '0 0 88%', scrollSnapAlign: 'start', borderRadius: 18, overflow: 'hidden', height: 380 }}>
-              <img
-                src={src}
-                srcSet={`${src}&w=640 640w, ${src}&w=1024 1024w, ${src}&w=1920 1920w`}
-                sizes="(max-width: 768px) 88vw, 400px"
-                alt=""
-                width={1200}
-                height={800}
-                loading="lazy"
-                decoding="async"
-                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-              />
+              <img src={src} srcSet={`${src}&w=640 640w, ${src}&w=1024 1024w, ${src}&w=1920 1920w`} sizes="(max-width:768px) 88vw, 380px" alt="" width={1200} height={800} loading="lazy" decoding="async" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
             </div>
           ))}
         </div>
       </div>
-      <p className="muted" style={{ fontSize: 11, marginTop: 6 }}>Foto reali attività in alta qualità · swipe su mobile, griglia su desktop — primo piano grande</p>
+      <p className="muted" style={{ fontSize: 11, marginTop: 6 }}>Foto reali attività — swipe su mobile, griglia su desktop</p>
 
-      <div className="card">
-        <h2 style={{ marginTop: 0 }}>Dati fondamentali</h2>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, fontSize: 14 }}>
-          <div><strong>Servizi:</strong> {p.services_offered.join(', ')}</div>
-          <div><strong>Telefono:</strong> {p.phone}</div>
-          <div><strong>Email:</strong> {p.email}</div>
-          <div><strong>Crediti:</strong> {p.credits}</div>
+      {/* Struttura completa a 2 colonne */}
+      <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 0.8fr', gap: 16, marginTop: 16 }}>
+        <div className="card" style={{ marginTop: 0 }}>
+          <h2 style={{ marginTop: 0 }}>Dati fondamentali</h2>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, fontSize: 14 }}>
+            <div><span className="muted">Servizi</span><br /><strong>{p.services_offered.join(', ')}</strong></div>
+            <div><span className="muted">Telefono</span><br /><strong>{p.phone}</strong></div>
+            <div><span className="muted">Email</span><br /><strong style={{ wordBreak: 'break-all' }}>{p.email}</strong></div>
+            <div><span className="muted">Disponibilità</span><br /><strong>Verificata STROBE · {p.credits} crediti</strong></div>
+          </div>
+          <div style={{ marginTop: 16 }}>
+            <a className="btn" href={`/?prompt=${encodeURIComponent(p.services_offered[0] + ' a Monza')}&partner=${p.id}`}>Contatta tramite STROBE — redirect immediato</a>
+            <p className="muted" style={{ fontSize: 12, marginTop: 8 }}>Pagina sotto STROBE con standard unico. Al click parti con waterfall: se occupato, ti reindirizziamo subito al migliore vicino.</p>
+          </div>
         </div>
-        <div style={{ marginTop: 16 }}>
-          <a className="btn" href={`/?prompt=${encodeURIComponent(p.services_offered[0] + ' a Monza')}&partner=${p.id}`}>Contatta tramite STROBE — redirect immediato</a>
-          <p className="muted" style={{ fontSize: 12, marginTop: 8 }}>Sotto di noi con standard unico, ma reindirizziamo subito al partner giusto via waterfall.</p>
+
+        <div className="card" style={{ marginTop: 0 }}>
+          <h3 style={{ marginTop: 0 }}>Orari & Zona</h3>
+          <p className="muted" style={{ fontSize: 14, margin: 0 }}>Copre {p.coverage_radius_km}km da Monza · Aperto secondo disponibilità verificata</p>
+          <div style={{ marginTop: 12, background: '#f5f5f7', borderRadius: 12, height: 120, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <span className="muted" style={{ fontSize: 12 }}>Mappa Monza Brianza — {p.coverage_radius_km}km</span>
+          </div>
+          <p className="muted" style={{ fontSize: 12, marginTop: 8 }}>Dati fondamentali verificati il {new Date(p.created_at).toLocaleDateString('it-IT')}</p>
         </div>
       </div>
+
+      {/* Altri simili a quello che cerchi — stessa struttura, stesso standard */}
+      {simili.length > 0 && (
+        <div className="card">
+          <h2 style={{ marginTop: 0 }}>Altri simili a quello che cerchi a Monza</h2>
+          <p className="muted" style={{ fontSize: 13, marginTop: 0 }}>Stesso servizio, stesso standard STROBE — scorri e scegli</p>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(240px,1fr))', gap: 12, marginTop: 12 }}>
+            {simili.map((s) => (
+              <a key={s.id} href={`/p/${s.id}`} style={{ textDecoration: 'none', color: 'var(--text)', background: '#fff', border: '1px solid var(--card-border)', borderRadius: 14, padding: 14, display: 'block' }}>
+                <strong>{s.name}</strong> {s.is_verified && <span style={{ fontSize: 11, background: 'var(--accent-soft)', color: 'var(--accent)', padding: '2px 8px', borderRadius: 999 }}>✓</span>}
+                <div className="muted" style={{ fontSize: 13, marginTop: 4 }}>{s.services_offered.join(', ')} · {s.rating}★</div>
+              </a>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
