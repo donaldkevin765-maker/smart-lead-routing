@@ -37,6 +37,25 @@ export default async function ProblemaPage({ params }: { params: Promise<{ slug:
         <h1>{esca.h1}</h1>
         {/* Cover anonimizzata — coerente con vertical, nessun volto */}
         <img src={`https://picsum.photos/seed/${esca.coverSeed}/800/420?blur=2`} alt="" width={800} height={420} style={{ width: '100%', height: 220, objectFit: 'cover', borderRadius: 18, marginTop: 14, opacity: 0.94 }} loading="lazy" />
+        {/* Primo piano entrambi — trainer + cliente, volti sfocati vicino alla scritta */}
+        {esca.slug === 'palestra-con-sauna-monza' && (
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginTop: 14 }}>
+            {[
+              { seed: 'strobe-trainer-primo-piano', label: 'Trainer', sub: 'Volto anonimizzato' },
+              { seed: 'strobe-cliente-primo-piano', label: 'Cliente', sub: 'Primo piano sfocato' },
+            ].map((p) => (
+              <div key={p.seed} style={{ position: 'relative', borderRadius: 16, overflow: 'hidden', aspectRatio: '4/3', background: '#eee' }}>
+                <img src={`https://picsum.photos/seed/${p.seed}/600/450?blur=2`} alt="" width={600} height={450} style={{ width: '100%', height: '100%', objectFit: 'cover' }} loading="lazy" />
+                {/* Blur mirato sul volto */}
+                <div style={{ position: 'absolute', top: '14%', left: '30%', width: '34%', height: '38%', backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)', borderRadius: 999, opacity: 0.95 }} />
+                <div style={{ position: 'absolute', bottom: 10, left: 10, right: 10, background: 'rgba(255,255,255,0.84)', backdropFilter: 'blur(12px)', borderRadius: 10, padding: '8px 10px', border: '1px solid rgba(0,0,0,0.06)' }}>
+                  <strong style={{ display: 'block', fontSize: 13, lineHeight: 1.2 }}>{p.label}</strong>
+                  <span style={{ fontSize: 11, color: 'var(--muted)' }}>{p.sub} — vicino alla scritta</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
         <p style={{ marginTop: 12 }}>{esca.intro}</p>
         <div style={{ marginTop: 16 }}>
           <a className="btn" href={href}>Trova professionista per questo — 1 click</a>
