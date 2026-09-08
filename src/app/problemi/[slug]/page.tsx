@@ -35,7 +35,9 @@ export default async function ProblemaPage({ params }: { params: Promise<{ slug:
       <div className="hero" style={{ padding: '24px 0 8px' }}>
         <span className="hero-eyebrow">{esca.city} · {esca.service}</span>
         <h1>{esca.h1}</h1>
-        <p>{esca.intro}</p>
+        {/* Cover anonimizzata — coerente con vertical, nessun volto */}
+        <img src={`https://picsum.photos/seed/${esca.coverSeed}/800/420?blur=2`} alt="" width={800} height={420} style={{ width: '100%', height: 220, objectFit: 'cover', borderRadius: 18, marginTop: 14, opacity: 0.94 }} loading="lazy" />
+        <p style={{ marginTop: 12 }}>{esca.intro}</p>
         <div style={{ marginTop: 16 }}>
           <a className="btn" href={href}>Trova professionista per questo — 1 click</a>
           <p className="muted" style={{ fontSize: 13, marginTop: 8 }}>Ti porta alla chat con richiesta già pronta, GPS vicino a {esca.city}.</p>
