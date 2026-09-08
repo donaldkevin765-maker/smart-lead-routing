@@ -61,9 +61,15 @@ export default function PartnerPage() {
     }));
   }
 
+  const [availability, setAvailability] = useState(''); // es. lun-ven 9-19, sab 9-13 — per fitness/benessere
   async function create(e: React.FormEvent) {
     e.preventDefault();
     setMsg('Salvataggio…');
+    let avail: Record<string, string[]> | null = null;
+    if (availability.trim()) {
+      // WHY slot: palestra/massaggio prenota orario, idraulico no — se vuoto = sempre disponibile
+      try { avail = JSON.parse(availability); } catch { avail = { note: [availability] } as unknown as Record<string, string[]>; }
+    }
     const res = await fetch('/api/partners', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -77,6 +83,7 @@ export default function PartnerPage() {
         lon: parseFloat(form.lon),
         coverage_radius_km: parseInt(form.coverage_radius_km, 10),
         max_daily_leads: parseInt(form.max_daily_leads, 10),
+        availability: avail,
       }),
     });
     const data = await res.json();
@@ -176,6 +183,16 @@ export default function PartnerPage() {
             <div>
               <label className="label">Telegram Chat ID</label>
               <input className="input" value={form.telegram_chat_id} onChange={(e) => setForm({ ...form, telegram_chat_id: e.target.value })} placeholder="Da @userinfobot" />
+            </div>
+          </div>
+          <div className="row">
+            <div>
+              <label className="label">Max lead/giorno</label>
+              <input className="input" value={form.max_daily_leads} onChange={(e) => setForm({ ...form, max_daily_leads: e.target.value })} />
+            </div>
+            <div>
+              <label className="label">Disponibilità (fitness/benessere, opzionale)</label>
+              <input className="input" value={availability} onChange={(e) => setAvailability(e.target.value)} placeholder='{"lun":["09:00-19:00"],"sab":["09:00-13:00"]} o lun-ven 9-19' />
             </div>
           </div>
           <label className="label">Servizi offerti (da catalogo multi-settore)</label>

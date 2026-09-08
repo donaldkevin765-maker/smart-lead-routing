@@ -17,7 +17,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               Smart Lead Routing
             </a>
             <div className="nav-links">
-              <a href="/">Richiedi intervento</a>
+              <a href="/">Richiedi</a>
+              <a href="/problemi">Problemi</a>
               <a href="/partner">Sei un professionista?</a>
             </div>
           </div>

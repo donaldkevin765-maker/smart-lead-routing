@@ -1,0 +1,170 @@
+type Esca = {
+  slug: string;
+  title: string;
+  h1: string;
+  service: string;
+  city: string;
+  prompt: string;
+  intro: string;
+  cause: string;
+  fareSubito: string[];
+  quandoChiamare: string;
+  fasciaPrezzo: string;
+  faq: { q: string; a: string }[];
+};
+
+const ESCHE: Esca[] = [
+  {
+    slug: 'caldaia-bloccata-monza',
+    title: 'Caldaia bloccata a Monza: errore E35, cosa fare subito',
+    h1: 'Caldaia bloccata a Monza — errore E35 e perdita',
+    service: 'caldaia',
+    city: 'Monza',
+    prompt: 'Caldaia in blocco errore E35, perdita acqua a Monza',
+    intro: 'A Monza con la caldaia in blocco non aspetti domani: in inverno la casa si raffredda in 2 ore e la perdita può allagare. Qui capisci in 60 secondi se puoi sbloccarla da solo o se serve un tecnico vicino, senza chiamare a caso.',
+    cause: 'Le cause più comuni a Monza/Brianza sono pressione bassa (<1 bar), sonda NTC sporca, scambiatore intasato da calcare (acqua dura Brianza) e valvola gas. L\'errore E35 spesso è fiamma instabile.',
+    fareSubito: ['Controlla pressione sul manometro: se <1 bar, apri rubinetto di carico fino a 1.2 bar', 'Spegni/riaccendi con reset 5 secondi, una sola volta', 'Chiudi acqua se vedi gocce sotto la caldaia e metti asciugamani'],
+    quandoChiamare: 'Chiama subito se odore di gas, acqua che continua a gocciolare o blocco che torna dopo reset. Un tecnico di zona arriva in 30-45 min.',
+    fasciaPrezzo: 'Sblocco e spurgo €80-150, sonda/valvola €120-220. Preventivo chiaro prima di partire.',
+    faq: [
+      { q: 'Posso sbloccare la caldaia da solo?', a: 'Solo reset e pressione. Se torna E35, serve tecnico — insistere danneggia la scheda.' },
+      { q: 'Quanto arriva un tecnico a Monza?', a: 'In Brianza 30-60 minuti se è in zona e ha credito disponibile nel sistema.' },
+      { q: 'Devo pagare anche se non ripara?', a: 'No, paghi solo l\'uscita se accetta il lead e viene. Se non viene, il lead passa al successivo.' },
+    ],
+  },
+  {
+    slug: 'perdita-acqua-sotto-lavello-monza',
+    title: 'Perdita acqua sotto lavello a Monza: cosa fare',
+    h1: 'Perdita acqua sotto il lavello a Monza',
+    service: 'idraulica',
+    city: 'Monza',
+    prompt: 'Perdita acqua sotto lavello cucina a Monza',
+    intro: 'Goccia sotto il lavello a Monza? Il mobile si gonfia in poche ore. Qui impari a chiudere l\'acqua e a far arrivare un idraulico vicino senza girare 10 numeri.',
+    cause: 'Flessibili usurati, piletta allentata, guarnizione sifone. In Brianza il calcare accelera le perdite sui giunti.',
+    fareSubito: ['Chiudi rubinetto sottolavello (o generale se non lo trovi)', 'Asciuga e metti bacinella, foto del punto che perde', 'Non usare silicone fai-da-te, regge poche ore'],
+    quandoChiamare: 'Se il sifone è crepato o l\'acqua esce anche a rubinetto chiuso. Urgenza alta se allaga.',
+    fasciaPrezzo: 'Sifone/guarnizione €70-120, flessibile €90-140.',
+    faq: [
+      { q: 'Chiudo l\'acqua generale?', a: 'Solo se non trovi il rubinetto sottolavello. Altrimenti chiudi solo quello.' },
+      { q: 'Arriva oggi?', a: 'Sì, gli idraulici in zona Monza gestiscono le perdite in giornata.' },
+    ],
+  },
+  {
+    slug: 'palestra-con-sauna-monza',
+    title: 'Palestra con sauna a Monza: prova vicino a te',
+    h1: 'Palestra con sauna a Monza',
+    service: 'palestra',
+    city: 'Monza',
+    prompt: 'Cerco palestra con sauna vicino a Monza',
+    intro: 'Cerchi palestra con sauna a Monza per allenarti e recuperare? Confrontare orari e disponibilità a mano è lento. Descrivi cosa cerchi e ti indirizziamo alle palestre vicine con sauna, aperte ora.',
+    cause: 'A Monza molte palestre hanno sauna solo in certi slot. Il filtro orario evita di mandarti dove è chiusa.',
+    fareSubito: ['Scegli zona (Monza centro, San Fruttuoso, Triante)', 'Indica orario preferito (pranzo/sera)', 'Chiedi prova gratuita'],
+    quandoChiamare: 'Se vuoi provare oggi, le palestre con slot liberi ora ti rispondono in minuti.',
+    fasciaPrezzo: 'Prova €0-15, abbonamento €35-65/mese.',
+    faq: [
+      { q: 'Devo prenotare la sauna?', a: 'Alcune sì, te lo dice il partner quando ti chiama.' },
+      { q: 'C\'è prova gratuita?', a: 'Spesso sì, chiedilo nella richiesta.' },
+    ],
+  },
+  {
+    slug: 'parrucchiere-donna-monza',
+    title: 'Parrucchiere donna a Monza: taglio e colore',
+    h1: 'Parrucchiere donna a Monza',
+    service: 'parrucchiere',
+    city: 'Monza',
+    prompt: 'Cerco parrucchiere donna a Monza per taglio e colore',
+    intro: 'Taglio e colore a Monza? Invece di scorrere 20 profili, dicci cosa vuoi e ti colleghiamo ai parrucchieri vicini con disponibilità oggi.',
+    cause: 'Colore e schiariture richiedono consulenza: il sistema ti manda da chi fa quel servizio davvero.',
+    fareSubito: ['Foto del taglio desiderato', 'Ultimo colore fatto e quando', 'Giorno/orario preferito'],
+    quandoChiamare: 'Se vuoi slot nel weekend, prenota con 2-3 giorni di anticipo.',
+    fasciaPrezzo: 'Taglio €25-45, colore €60-120.',
+    faq: [{ q: 'Quanto dura?', a: 'Taglio 45 min, colore 90-120 min.' }],
+  },
+  {
+    slug: 'pulizie-casa-monza',
+    title: 'Pulizie casa a Monza: domestica e condominio',
+    h1: 'Pulizie casa a Monza',
+    service: 'pulizie',
+    city: 'Monza',
+    prompt: 'Cerco servizio pulizie casa a Monza',
+    intro: 'Pulizie a Monza per casa o condominio? Dicci metri, frequenza e zona, ti mandiamo da chi copre davvero Monza e ha credito per venire.',
+    cause: 'Le pulizie si pagano a ore o a corpo: specificare subito evita preventivi gonfiati.',
+    fareSubito: ['Metri e stanze', 'Frequenza (1x settimana, quindicinale)', 'Prodotti inclusi o tuoi'],
+    quandoChiamare: 'Se serve domani, le ditte con slot liberi ora ti chiamano subito.',
+    fasciaPrezzo: '€12-16/ora, appartamento 70mq €70-90 a intervento.',
+    faq: [{ q: 'Prodotti inclusi?', a: 'Chiedilo — alcune includono, altre no.' }],
+  },
+  {
+    slug: 'trasloco-monza-brianza',
+    title: 'Trasloco a Monza e Brianza: preventivo veloce',
+    h1: 'Trasloco a Monza e Brianza',
+    service: 'traslochi',
+    city: 'Monza',
+    prompt: 'Trasloco da Monza a Lissone, bilocale',
+    intro: 'Trasloco in Brianza? Volume, piani e ascensore cambiano il prezzo del 40%. Descrivilo e ti mandiamo a chi fa quella tratta.',
+    cause: 'Brianza = palazzi senza ascensore e ZTL centro: il traslocatore di zona lo sa già.',
+    fareSubito: ['Da dove a dove, piano e ascensore', 'Volume (bilocale, 30 scatole)', 'Data desiderata'],
+    quandoChiamare: 'Fine mese è picco — prenota 10 giorni prima.',
+    fasciaPrezzo: 'Bilocale Monza-Lissone €400-700 con montaggio.',
+    faq: [{ q: 'Smontate i mobili?', a: 'Sì, quasi tutti includono smontaggio/montaggio.' }],
+  },
+  {
+    slug: 'elettricista-monza-urgenza',
+    title: 'Elettricista a Monza: corto e salvavita che salta',
+    h1: 'Elettricista a Monza — salvavita che salta',
+    service: 'elettricista',
+    city: 'Monza',
+    prompt: 'Salvavita salta in casa a Monza, serve elettricista urgente',
+    intro: 'Salvavita che salta a Monza? Non insistere a rialzarlo. Qui capisci se è elettrodomestico o impianto e fai arrivare un elettricista vicino.',
+    cause: 'Lavastoviglie/forno umidi, presa esterna bagnata, differenziale guasto. Stacca le spine una a una per isolare.',
+    fareSubito: ['Stacca spine, prova a rialzare', 'Se tiene, ricollega uno alla volta', 'Se salta subito anche tutto staccato, chiama'],
+    quandoChiamare: 'Subito se senti odore di bruciato o scintille.',
+    fasciaPrezzo: 'Uscita + ricerca guasto €80-130, presa/differenziale €90-180.',
+    faq: [{ q: 'È pericoloso?', a: 'Sì se insisti — il salvavita ti sta proteggendo.' }],
+  },
+  {
+    slug: 'climatizzazione-monza',
+    title: 'Climatizzazione a Monza: installazione e ricarica',
+    h1: 'Climatizzazione a Monza',
+    service: 'climatizzazione',
+    city: 'Monza',
+    prompt: 'Installazione climatizzatore a Monza, 9000 BTU',
+    intro: 'Clima a Monza per l\'estate brianzola umida? Dicci metri e se hai predisposizione, ti mandiamo a chi installa davvero in zona.',
+    cause: 'Senza predisposizione serve staffa e carotaggio: il prezzo cambia.',
+    fareSubito: ['Metri stanza e piano', 'Predisposizione sì/no', 'Unità esterna dove'],
+    quandoChiamare: 'Prima di maggio paghi meno che a luglio.',
+    fasciaPrezzo: 'Installazione 9000 BTU €700-950 con macchina.',
+    faq: [{ q: 'Serve permesso?', a: 'Condominiale sì per unità esterna.' }],
+  },
+  {
+    slug: 'massaggi-decontratturante-monza',
+    title: 'Massaggi decontratturante a Monza',
+    h1: 'Massaggi decontratturante a Monza',
+    service: 'massaggi',
+    city: 'Monza',
+    prompt: 'Cerco massaggio decontratturante a Monza',
+    intro: 'Schiena bloccata a Monza? Ti indirizziamo ai centri con disponibilità oggi, vicino a te.',
+    cause: 'Decontratturante ≠ rilassante: serve chi lo fa davvero.',
+    fareSubito: ['Zona dolente e da quanto', 'Orario preferito', 'Prima volta o già cliente'],
+    quandoChiamare: 'Se hai disponibilità oggi, filtra per aperto ora.',
+    fasciaPrezzo: '60 min €45-65.',
+    faq: [{ q: 'Serve certificato?', a: 'No, ma avvisa se hai ernie.' }],
+  },
+  {
+    slug: 'giardinaggio-monza-potatura',
+    title: 'Giardinaggio a Monza: potatura e prato',
+    h1: 'Giardinaggio a Monza — potatura e prato',
+    service: 'giardinaggio',
+    city: 'Monza',
+    prompt: 'Potatura siepe e taglio prato a Monza',
+    intro: 'Siepe da potare e prato da tagliare a Monza? Dicci metri e se serve smaltimento verde, ti mandiamo al giardiniere di zona.',
+    cause: 'Potatura in Brianza ha stagioni: siepe ora, alberi in inverno.',
+    fareSubito: ['Metri siepe/prato', 'Smaltimento incluso?', 'Foto del giardino'],
+    quandoChiamare: 'Primavera è picco — prenota prima.',
+    fasciaPrezzo: 'Prato 200mq €40-60 a taglio, siepe €5-8 al metro.',
+    faq: [{ q: 'Portate via il verde?', a: 'Quasi sempre sì, chiedi se incluso.' }],
+  },
+];
+
+export function getEsche(): Esca[] { return ESCHE; }
+export function getEsca(slug: string): Esca | undefined { return ESCHE.find((e) => e.slug === slug); }

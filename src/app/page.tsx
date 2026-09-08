@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 interface QualResult {
   success: boolean;
@@ -23,6 +23,7 @@ export default function HomePage() {
   const [geoMsg, setGeoMsg] = useState('');
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<QualResult | null>(null);
+  const [clarify, setClarify] = useState<{ need: boolean; question: string; suggestion: string } | null>(null);
   const [ts] = useState(() => Date.now());
 
   function useGps() {
@@ -62,11 +63,29 @@ export default function HomePage() {
     }
   }
 
+  // WHY chat 2 turni: se Gemini è incerto (generico), 1 domanda di chiarimento prima di match = +20% precisione, senza 5 domande
+  async function qualifyFirst(): Promise<{ service: string; urgency: string } | null> {
+    try {
+      const r = await fetch('/api/qualify-lead', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ prompt }) });
+      const j = await r.json();
+      if (j.success && j.qualification) return j.qualification;
+    } catch {}
+    return null;
+  }
+
   async function submit(e: React.FormEvent) {
     e.preventDefault();
     setLoading(true);
     setResult(null);
+    setClarify(null);
     try {
+      // Sprint 2: 1 chiarimento se generico — non spreca lead a caso
+      const q = await qualifyFirst();
+      if (q && q.service === 'generico' && !clarify) {
+        setClarify({ need: true, question: 'Non ho capito bene il servizio — è per casa, palestra o benessere?', suggestion: 'Es. "cerco palestra con sauna" o "perdita acqua cucina"' });
+        setLoading(false);
+        return;
+      }
       const website = (document.querySelector('input[name="website"]') as HTMLInputElement)?.value || '';
       const res = await fetch('/api/leads', {
         method: 'POST',
@@ -81,6 +100,12 @@ export default function HomePage() {
       setLoading(false);
     }
   }
+
+  // Prefill da URL per pagine-esca SEO: /?prompt=palestra+sauna+Monza
+  useEffect(() => {
+    const p = new URLSearchParams(window.location.search).get('prompt');
+    if (p) setPrompt(p);
+  }, []);
 
   return (
     <div>
@@ -98,9 +123,20 @@ export default function HomePage() {
             rows={3}
             placeholder="Es. Si è rotta la caldaia, perdita d'acqua in cucina"
             value={prompt}
-            onChange={(e) => setPrompt(e.target.value)}
+            onChange={(e) => { setPrompt(e.target.value); setClarify(null); }}
             required
           />
+          {clarify && (
+            <div className="contact-box" style={{ marginTop: 8, background: 'var(--warn-bg)', borderColor: 'rgba(178,94,9,0.2)' }}>
+              <p style={{ margin: 0, fontWeight: 600, fontSize: 14 }}>{clarify.question}</p>
+              <p className="muted" style={{ fontSize: 13, margin: '4px 0 0' }}>{clarify.suggestion}</p>
+              <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginTop: 8 }}>
+                {['idraulica', 'palestra', 'parrucchiere', 'pulizie'].map((s) => (
+                  <button key={s} type="button" className="chip" onClick={() => setPrompt((p) => `${p} ${s}`.trim())}>{s}</button>
+                ))}
+              </div>
+            </div>
+          )}
           <div className="row">
             <div>
               <label className="label">Posizione GPS</label>

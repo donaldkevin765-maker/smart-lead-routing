@@ -19,7 +19,7 @@ export async function GET() {
 export async function POST(req: Request) {
   try {
     const b = await req.json();
-    const { name, email, phone, telegram_chat_id, services_offered, lat, lon, coverage_radius_km, max_daily_leads } = b as {
+    const { name, email, phone, telegram_chat_id, services_offered, lat, lon, coverage_radius_km, max_daily_leads, availability } = b as {
       name?: string;
       email?: string;
       phone?: string;
@@ -29,6 +29,7 @@ export async function POST(req: Request) {
       lon?: number;
       coverage_radius_km?: number;
       max_daily_leads?: number;
+      availability?: Record<string, unknown> | null;
     };
     if (!name || !email || !phone) return NextResponse.json({ success: false, error: 'name/email/phone richiesti' }, { status: 400 });
     if (typeof lat !== 'number' || typeof lon !== 'number')
@@ -47,6 +48,7 @@ export async function POST(req: Request) {
         location: point(lat, lon),
         coverage_radius_km: coverage_radius_km || 20,
         max_daily_leads: max_daily_leads || 10,
+        availability: availability || null,
       })
       .select('id')
       .single();
@@ -70,7 +72,7 @@ export async function PATCH(req: Request) {
     if (!id) return NextResponse.json({ success: false, error: 'id richiesto' }, { status: 400 });
     const sb = getSupabaseServer();
     const update: Record<string, unknown> = {};
-    for (const k of ['name', 'email', 'phone', 'telegram_chat_id', 'services_offered', 'coverage_radius_km', 'rating', 'max_daily_leads', 'leads_today', 'is_active'] as const) {
+    for (const k of ['name', 'email', 'phone', 'telegram_chat_id', 'services_offered', 'coverage_radius_km', 'rating', 'max_daily_leads', 'leads_today', 'is_active', 'is_verified', 'credits', 'availability'] as const) {
       if (b[k] !== undefined) update[k] = b[k];
     }
     if (typeof b.lat === 'number' && typeof b.lon === 'number') update.location = point(b.lat as number, b.lon as number);
