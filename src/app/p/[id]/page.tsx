@@ -55,9 +55,8 @@ export default async function PartnerPage({ params }: { params: Promise<{ id: st
         <p className="muted" style={{ margin: '8px 0 0', fontSize: 14 }}>
           {p.services_offered.map((s) => <span key={s} className="chip on" style={{ marginRight: 6 }}>{s}</span>)} · Raggio {p.coverage_radius_km}km · Monza Brianza
         </p>
-        {/* Contatti sotto logo — come pagine professionali */}
+        {/* Contatti sotto logo — come pagine professionali, senza telefono */}
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12, marginTop: 12, fontSize: 13, background: '#fff', border: '1px solid var(--card-border)', borderRadius: 12, padding: '10px 14px' }}>
-          <span>📞 <strong>{p.phone}</strong></span>
           <span>✉️ {p.email}</span>
           <span>📍 Monza Brianza · {p.coverage_radius_km}km</span>
           <span>🕒 Verificato STROBE</span>
@@ -83,9 +82,9 @@ export default async function PartnerPage({ params }: { params: Promise<{ id: st
           <h2 style={{ marginTop: 0 }}>Dati fondamentali</h2>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, fontSize: 14 }}>
             <div><span className="muted">Servizi</span><br /><strong>{p.services_offered.join(', ')}</strong></div>
-            <div><span className="muted">Telefono</span><br /><strong>{p.phone}</strong></div>
             <div><span className="muted">Email</span><br /><strong style={{ wordBreak: 'break-all' }}>{p.email}</strong></div>
             <div><span className="muted">Disponibilità</span><br /><strong>Verificata STROBE · {p.credits} crediti</strong></div>
+            <div><span className="muted">Zona</span><br /><strong>{p.coverage_radius_km}km da Monza</strong></div>
           </div>
           <div style={{ marginTop: 16 }}>
             <a href={`/?prompt=${encodeURIComponent(p.services_offered[0] + ' a Monza')}&partner=${p.id}`} style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: '#111', color: '#fff', padding: '12px 20px', borderRadius: 999, fontSize: 14, fontWeight: 600, textDecoration: 'none', letterSpacing: '-0.01em' }}>

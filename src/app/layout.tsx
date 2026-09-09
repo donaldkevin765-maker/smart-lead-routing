@@ -24,11 +24,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           </div>
         </nav>
         <div className="container">{children}</div>
-        {/* Footer minimale — solo mark, come da richiesta */}
+        {/* Footer minimale — solo mark + email STROBE */}
         <footer style={{ borderTop: '1px solid var(--card-border)', marginTop: 64, padding: '28px 0', textAlign: 'center' }}>
           <a href="https://shop-brianza.com" target="_blank" rel="noopener" aria-label="Shop Brianza" style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', textDecoration: 'none' }}>
             <img src="/shop-brianza.svg" alt="" width={36} height={22} style={{ opacity: 0.85 }} />
           </a>
+          <div style={{ marginTop: 10, fontSize: 12, color: 'var(--muted)' }}>
+            <a href="mailto:infostrobe5@gmail.com" style={{ color: 'var(--muted)', textDecoration: 'none' }}>infostrobe5@gmail.com</a>
+          </div>
         </footer>
       </body>
     </html>
