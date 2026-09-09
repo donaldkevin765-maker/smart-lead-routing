@@ -47,18 +47,19 @@ export default function PartnerContactBox({ partnerId, service }: { partnerId: s
     <div className="card" style={{ padding: 28 }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 6 }}>
         <span style={{ width: 28, height: 28, borderRadius: 999, background: 'var(--accent-soft)', color: 'var(--accent)', display: 'grid', placeItems: 'center', fontSize: 14 }}>✦</span>
-        <h2 style={{ margin: 0, fontSize: 20 }}>Cosa ti serve?</h2>
+        <h2 style={{ margin: 0, fontSize: 22, letterSpacing: '-0.02em' }}>Di cosa hai bisogno?</h2>
       </div>
-      <p className="muted" style={{ fontSize: 13, margin: '4px 0 14px' }}>Scrivi a parole tue, ti capiamo al volo. Puoi solo guardare — contatti solo se vuoi.</p>
-      <textarea className="textarea" rows={3} placeholder={`Es. ${service} a Monza, ho bisogno di...`} value={prompt} onChange={(e) => { setPrompt(e.target.value); if (cat) setCat(null); }} style={{ fontSize: 16, borderRadius: 14 }} />
-      <div style={{ display: 'flex', gap: 8, marginTop: 12, flexWrap: 'wrap' }}>
-        <button className="btn btn-secondary" onClick={categorize} disabled={loading || prompt.trim().length < 10} style={{ borderRadius: 999, padding: '10px 18px', fontSize: 14 }}>{loading ? '...' : 'Capisci cosa mi serve'}</button>
-        {cat && <span style={{ alignSelf: 'center', fontSize: 13, background: 'var(--success-bg)', color: 'var(--success)', padding: '6px 12px', borderRadius: 999 }}>→ {cat.service} · {cat.urgency}</span>}
+      <p className="muted" style={{ fontSize: 13.5, margin: '4px 0 14px', lineHeight: 1.4 }}>Descrivila come vuoi. Ti diciamo subito chi può aiutarti — <strong style={{ color: 'var(--text)', fontWeight: 600 }}>senza dare il numero</strong>.</p>
+      <textarea className="textarea" rows={3} placeholder={`Es. ${service} a Monza, perde acqua in cucina da stamattina...`} value={prompt} onChange={(e) => { setPrompt(e.target.value); if (cat) setCat(null); }} style={{ fontSize: 16, borderRadius: 14 }} />
+      <div style={{ display: 'flex', gap: 8, marginTop: 12, flexWrap: 'wrap', alignItems: 'center' }}>
+        <button className="btn btn-secondary" onClick={categorize} disabled={loading || prompt.trim().length < 10} style={{ borderRadius: 999, padding: '11px 20px', fontSize: 14, fontWeight: 600 }}>{loading ? '...' : 'Vedi chi può aiutarmi'}</button>
+        {cat && <span style={{ fontSize: 13, background: 'var(--success-bg)', color: 'var(--success)', padding: '6px 12px', borderRadius: 999, fontWeight: 600 }}>→ {cat.service} · {cat.urgency}</span>}
       </div>
 
       {cat && (
         <div style={{ marginTop: 16, paddingTop: 16, borderTop: '1px solid var(--card-border)', animation: 'rise 0.3s var(--spring)' }}>
-          <p className="muted" style={{ fontSize: 13, margin: '0 0 10px' }}>Vuoi essere ricontattato per questo?</p>
+          <p style={{ fontSize: 13, margin: '0 0 10px', fontWeight: 600 }}>Vuoi essere ricontattato per <strong>{cat.service}</strong>?</p>
+          <p className="muted" style={{ fontSize: 12, margin: '0 0 10px' }}>Lascia nome e telefono solo se vuoi — altrimenti hai già visto la categoria.</p>
           <div className="row">
             <div><label className="label" style={{ marginTop: 0 }}>Nome</label><input className="input" value={name} onChange={(e) => setName(e.target.value)} placeholder="Mario" /></div>
             <div><label className="label" style={{ marginTop: 0 }}>Telefono</label><input className="input" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="3XX XXX XXXX" /></div>
@@ -67,7 +68,7 @@ export default function PartnerContactBox({ partnerId, service }: { partnerId: s
           <button className="btn" onClick={send} disabled={loading} style={{ marginTop: 12, background: '#111', borderRadius: 999, padding: '12px 22px' }}>Invia richiesta — redirect immediato →</button>
         </div>
       )}
-      {!cat && <p className="muted" style={{ fontSize: 11, marginTop: 10 }}>Premi "Capisci cosa mi serve" per vedere la categoria, poi decidi se farti chiamare.</p>}
+      {!cat && <p className="muted" style={{ fontSize: 11, marginTop: 10 }}>Nessun dato richiesto per vedere la categoria. Decidi dopo se lasciare il numero.</p>}
       {cat && <p className="muted" style={{ fontSize: 13, marginTop: 8 }}>→ {cat.service} · {cat.urgency} · {cat.summary}</p>}
       {msg && <p style={{ fontSize: 13, marginTop: 8 }}>{msg}</p>}
     </div>
