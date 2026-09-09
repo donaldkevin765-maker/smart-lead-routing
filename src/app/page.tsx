@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import AutoRotateGallery from '@/components/AutoRotateGallery';
 
 interface QualResult {
   success: boolean;
@@ -113,7 +114,11 @@ export default function HomePage() {
         <span className="hero-eyebrow">Geo-match · Routing istantaneo · Waterfall 15 min</span>
         <h1>Il professionista giusto, vicino a te.</h1>
         <p>Descrivi il problema in parole tue. Troviamo lo specialista più vicino e disponibile.</p>
-        {/* SEO smart: parole chiave nell'URL → gallery già filtrata sul settore cercato */}
+        {/* Sistema automatizzato — 4 foto che girano da sole, sempre aggiornate */}
+        <div style={{ marginTop: 16 }}>
+          <AutoRotateGallery seeds={['strobe-casa-1', 'strobe-fitness-1', 'strobe-benessere-1', 'strobe-servizi-1']} intervalMs={3500} />
+          <p className="muted" style={{ fontSize: 11, marginTop: 6 }}>4 foto per settore che girano automaticamente — cerca foto via CC0 e sostituzione periodica</p>
+        </div>
         <p className="muted" style={{ fontSize: 12, marginTop: 8 }}>Prova SEO: <a href="/problemi/palestra-con-sauna-monza">palestra</a> · <a href="/problemi/caldaia-bloccata-monza">caldaia</a> · <a href="/problemi/parrucchiere-donna-monza">parrucchiere</a> — ogni pagina apre già il settore cercato</p>
       </div>
       <div className="card">

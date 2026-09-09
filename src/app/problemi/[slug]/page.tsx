@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { getEsca, getEsche } from '@/lib/esche';
+import AutoRotateGallery from '@/components/AutoRotateGallery';
 
 export async function generateStaticParams() {
   return getEsche().map((e) => ({ slug: e.slug }));
@@ -35,21 +36,18 @@ export default async function ProblemaPage({ params }: { params: Promise<{ slug:
       <div className="hero" style={{ padding: '24px 0 8px' }}>
         <span className="hero-eyebrow">{esca.city} · {esca.service}</span>
         <h1>{esca.h1}</h1>
-        {/* Galleria swipe — scorri a destra/sinistra, mostra solo foto relative al settore cercato (SEO keywords → gallery filtrata) */}
-        <div style={{ display: 'flex', gap: 12, overflowX: 'auto', scrollSnapType: 'x mandatory', WebkitOverflowScrolling: 'touch', scrollbarWidth: 'none', marginTop: 14, paddingBottom: 4 }}>
-          {esca.gallery.map((seed) => (
-            <div key={seed} style={{ position: 'relative', flex: '0 0 88%', scrollSnapAlign: 'start', borderRadius: 18, overflow: 'hidden', height: 320, background: '#eee' }}>
-              <img src={`https://picsum.photos/seed/${seed}/900/600?blur=2`} alt="" width={900} height={600} style={{ width: '100%', height: '100%', objectFit: 'cover' }} loading="lazy" />
-              {/* Blur volto + label settore vicino alla scritta */}
-              <div style={{ position: 'absolute', top: '16%', left: '30%', width: '32%', height: '40%', backdropFilter: 'blur(18px)', WebkitBackdropFilter: 'blur(18px)', borderRadius: 999, opacity: 0.96 }} />
-              <div style={{ position: 'absolute', bottom: 12, left: 12, right: 12, background: 'rgba(255,255,255,0.86)', backdropFilter: 'blur(12px)', borderRadius: 10, padding: '10px 12px', border: '1px solid rgba(0,0,0,0.06)' }}>
-                <strong style={{ fontSize: 13 }}>{esca.service} — {esca.city}</strong>
-                <span className="muted" style={{ fontSize: 11, marginLeft: 6 }}>primo piano, volto sfocato</span>
+        {/* Galleria automatizzata — 4 foto che girano da sole e swipe, sempre relative al settore */}
+        <div style={{ marginTop: 14 }}>
+          <AutoRotateGallery seeds={esca.gallery} intervalMs={3800} />
+          <div style={{ display: 'flex', gap: 8, overflowX: 'auto', scrollSnapType: 'x mandatory', marginTop: 10, paddingBottom: 4 }}>
+            {esca.gallery.map((seed) => (
+              <div key={seed} style={{ flex: '0 0 22%', borderRadius: 12, overflow: 'hidden', height: 80, opacity: 0.85 }}>
+                <img src={`https://picsum.photos/seed/${seed}/400/300?blur=2`} alt="" width={400} height={300} style={{ width: '100%', height: '100%', objectFit: 'cover' }} loading="lazy" />
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
+          <p className="muted" style={{ fontSize: 11, marginTop: 6 }}>4 foto per {esca.service} che ruotano ogni 3.8s + swipe — ricerca e ricambio automatico</p>
         </div>
-        <p className="muted" style={{ fontSize: 11, marginTop: 6 }}>← scorri a destra/sinistra · foto relative a <strong>{esca.service}</strong> cercato</p>
         <p style={{ marginTop: 12 }}>{esca.intro}</p>
         <div style={{ marginTop: 16 }}>
           <a className="btn" href={href}>Trova professionista per questo — 1 click</a>
