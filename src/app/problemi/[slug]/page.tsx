@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { getEsca, getEsche } from '@/lib/esche';
-import AutoRotateGallery from '@/components/AutoRotateGallery';
+import SmartGallery from '@/components/SmartGallery';
 
 export async function generateStaticParams() {
   return getEsche().map((e) => ({ slug: e.slug }));
@@ -36,17 +36,10 @@ export default async function ProblemaPage({ params }: { params: Promise<{ slug:
       <div className="hero" style={{ padding: '24px 0 8px' }}>
         <span className="hero-eyebrow">{esca.city} · {esca.service}</span>
         <h1>{esca.h1}</h1>
-        {/* Galleria automatizzata — 4 foto che girano da sole e swipe, sempre relative al settore */}
+        {/* Smart Photos Tinder — rotazione all'accesso: mostra prima la foto che converte di più */}
         <div style={{ marginTop: 14 }}>
-          <AutoRotateGallery seeds={esca.gallery} intervalMs={3800} />
-          <div style={{ display: 'flex', gap: 8, overflowX: 'auto', scrollSnapType: 'x mandatory', marginTop: 10, paddingBottom: 4 }}>
-            {esca.gallery.map((seed) => (
-              <div key={seed} style={{ flex: '0 0 22%', borderRadius: 12, overflow: 'hidden', height: 80, opacity: 0.85 }}>
-                <img src={`https://picsum.photos/seed/${seed}/400/300?blur=2`} alt="" width={400} height={300} style={{ width: '100%', height: '100%', objectFit: 'cover' }} loading="lazy" />
-              </div>
-            ))}
-          </div>
-          <p className="muted" style={{ fontSize: 11, marginTop: 6 }}>4 foto per {esca.service} che ruotano ogni 3.8s + swipe — ricerca e ricambio automatico</p>
+          <SmartGallery seeds={esca.gallery} intervalMs={3800} />
+          <p className="muted" style={{ fontSize: 11, marginTop: 6 }}>Smart Photos — all&apos;accesso la migliore prima, impara dai click · 4 foto per {esca.service}</p>
         </div>
         <p style={{ marginTop: 12 }}>{esca.intro}</p>
         <div style={{ marginTop: 16 }}>
