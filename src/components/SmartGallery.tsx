@@ -3,37 +3,24 @@ import { useEffect, useState } from 'react';
 
 type Seed = string;
 
-function score(views: number, clicks: number): number {
-  if (views === 0) return Math.random(); // novità: esplora
-  return clicks / views + Math.random() * 0.05; // exploitation + piccola esplorazione
-}
-
-export default function SmartGallery({ seeds, intervalMs = 3800 }: { seeds: Seed[]; intervalMs?: number }) {
+export default function SmartGallery({ seeds }: { seeds: Seed[] }) {
   const [ordered, setOrdered] = useState<Seed[]>(seeds);
   const [idx, setIdx] = useState(0);
 
-  // All'accesso: ordina per performance (Smart Photos)
+  // All'accesso: mostra prima la foto relativa a cosa ha cercato su SEO (query → seed)
   useEffect(() => {
     try {
-      const raw = localStorage.getItem('strobe-photo-stats');
-      const stats: Record<string, { v: number; c: number }> = raw ? JSON.parse(raw) : {};
-      const sorted = [...seeds].sort((a, b) => score(stats[b]?.v || 0, stats[b]?.c || 0) - score(stats[a]?.v || 0, stats[a]?.c || 0));
-      setOrdered(sorted);
-      // impression per la prima vista
-      for (const s of sorted) {
-        if (!stats[s]) stats[s] = { v: 0, c: 0 };
-        stats[s].v += 1;
+      const q = (new URLSearchParams(window.location.search).get('q') || new URLSearchParams(window.location.search).get('prompt') || '').toLowerCase();
+      let sorted = [...seeds];
+      if (q) {
+        // keyword → seed: se la query contiene parola, porta quel seed in prima posizione
+        const hit = seeds.find((s) => q.includes(s.split('-')[1]) || q.includes(s.split('-').pop() || ''));
+        if (hit) sorted = [hit, ...seeds.filter((s) => s !== hit)];
       }
-      localStorage.setItem('strobe-photo-stats', JSON.stringify(stats));
-      // invio anche a server per aggregazione globale (best-effort)
-      fetch('/api/photo-stats', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ seeds: sorted, type: 'view' }) }).catch(() => {});
+      setOrdered(sorted);
+      setIdx(0);
     } catch {}
   }, [seeds.join(',')]);
-
-  useEffect(() => {
-    const id = setInterval(() => setIdx((i) => (i + 1) % ordered.length), intervalMs);
-    return () => clearInterval(id);
-  }, [ordered.length, intervalMs]);
 
   function onInteract(seed: string) {
     try {

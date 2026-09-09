@@ -38,7 +38,7 @@ export default async function ProblemaPage({ params }: { params: Promise<{ slug:
         <h1>{esca.h1}</h1>
         {/* Smart Photos Tinder — rotazione all'accesso: mostra prima la foto che converte di più */}
         <div style={{ marginTop: 14 }}>
-          <SmartGallery seeds={esca.gallery} intervalMs={3800} />
+          <SmartGallery seeds={esca.gallery} />
           <p className="muted" style={{ fontSize: 11, marginTop: 6 }}>Smart Photos — all&apos;accesso la migliore prima, impara dai click · 4 foto per {esca.service}</p>
         </div>
         <p style={{ marginTop: 12 }}>{esca.intro}</p>
