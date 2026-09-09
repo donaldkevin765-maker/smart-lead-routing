@@ -50,10 +50,18 @@ export default async function PartnerPage({ params }: { params: Promise<{ id: st
           <h1 style={{ margin: 0, fontSize: 'clamp(24px,4vw,36px)' }}>{p.name}</h1>
           {p.is_verified && <span style={{ fontSize: 13, background: 'var(--accent-soft)', color: 'var(--accent)', padding: '4px 10px', borderRadius: 999, fontWeight: 600 }}>✓ Verificato STROBE</span>}
           <span style={{ fontSize: 13, background: 'var(--success-bg)', color: 'var(--success)', padding: '4px 10px', borderRadius: 999 }}>{p.rating}★</span>
+          <span style={{ fontSize: 12, background: '#f5f5f7', padding: '4px 10px', borderRadius: 999 }}>Disponibilità Verificata STROBE · {p.credits} crediti</span>
         </div>
         <p className="muted" style={{ margin: '8px 0 0', fontSize: 14 }}>
           {p.services_offered.map((s) => <span key={s} className="chip on" style={{ marginRight: 6 }}>{s}</span>)} · Raggio {p.coverage_radius_km}km · Monza Brianza
         </p>
+        {/* Contatti sotto logo — come pagine professionali */}
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12, marginTop: 12, fontSize: 13, background: '#fff', border: '1px solid var(--card-border)', borderRadius: 12, padding: '10px 14px' }}>
+          <span>📞 <strong>{p.phone}</strong></span>
+          <span>✉️ {p.email}</span>
+          <span>📍 Monza Brianza · {p.coverage_radius_km}km</span>
+          <span>🕒 Verificato STROBE</span>
+        </div>
       </div>
 
       {/* Galleria grande — desktop griglia 3, mobile swipe */}
