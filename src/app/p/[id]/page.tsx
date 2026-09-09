@@ -102,16 +102,16 @@ export default async function PartnerPage({ params }: { params: Promise<{ id: st
             <p className="muted" style={{ fontSize: 14, margin: 0 }}>Copre {p.coverage_radius_km}km da Monza · Orari da verificare</p>
           )}
           <p className="muted" style={{ fontSize: 11, marginTop: 8 }}>Fonte: sito ufficiale / reception — verificato STROBE</p>
-          {/* MAPS gratuita — OpenStreetMap, clicchi e apri mappa grande */}
+          {/* MAPS gratuita — OpenStreetMap, clicchi e apri mappa grande — Edge-safe senza Buffer */}
           {(() => {
-            // location è EWKB hex "0101000020E610..." — parser come in cron
             let lat = 45.584, lon = 9.274;
             try {
               const hex = p.location as unknown as string;
               if (hex && hex.startsWith('0101')) {
-                const buf = Buffer.from(hex, 'hex');
-                lon = buf.readDoubleLE(9);
-                lat = buf.readDoubleLE(17);
+                const bytes = new Uint8Array(hex.match(/.{2}/g)!.map((h) => parseInt(h, 16)));
+                const view = new DataView(bytes.buffer);
+                lon = view.getFloat64(9, true);
+                lat = view.getFloat64(17, true);
               }
             } catch {}
             const bbox = `${lon - 0.01},${lat - 0.01},${lon + 0.01},${lat + 0.01}`;

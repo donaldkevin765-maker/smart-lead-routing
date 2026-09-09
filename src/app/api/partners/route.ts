@@ -16,6 +16,19 @@ export async function GET() {
   }
 }
 
+const AVAIL_SLOT_RE = /^\d{2}:\d{2}-\d{2}:\d{2}$/;
+function isValidAvailability(v: unknown): boolean {
+  if (v === null || v === undefined) return true;
+  if (typeof v !== 'object' || Array.isArray(v)) return false;
+  const allowed = new Set(['lun', 'mar', 'mer', 'gio', 'ven', 'sab', 'dom']);
+  for (const [k, arr] of Object.entries(v as Record<string, unknown>)) {
+    if (!allowed.has(k)) return false;
+    if (!Array.isArray(arr)) return false;
+    for (const s of arr as unknown[]) if (typeof s !== 'string' || !AVAIL_SLOT_RE.test(s)) return false;
+  }
+  return true;
+}
+
 export async function POST(req: Request) {
   try {
     const b = await req.json();
@@ -31,6 +44,8 @@ export async function POST(req: Request) {
       max_daily_leads?: number;
       availability?: Record<string, unknown> | null;
     };
+    if (availability !== undefined && !isValidAvailability(availability))
+      return NextResponse.json({ success: false, error: 'Disponibilità formato errato: usa {"lun":["09:00-17:00"]}' }, { status: 400 });
     if (!name || !email || !phone) return NextResponse.json({ success: false, error: 'name/email/phone richiesti' }, { status: 400 });
     if (typeof lat !== 'number' || typeof lon !== 'number')
       return NextResponse.json({ success: false, error: 'lat/lon richiesti' }, { status: 400 });
@@ -70,6 +85,8 @@ export async function PATCH(req: Request) {
     const b = await req.json();
     const { id, ...fields } = b as { id?: string; [k: string]: unknown };
     if (!id) return NextResponse.json({ success: false, error: 'id richiesto' }, { status: 400 });
+    if (b.availability !== undefined && !isValidAvailability(b.availability))
+      return NextResponse.json({ success: false, error: 'Disponibilità formato errato' }, { status: 400 });
     const sb = getSupabaseServer();
     const update: Record<string, unknown> = {};
     for (const k of ['name', 'email', 'phone', 'telegram_chat_id', 'services_offered', 'coverage_radius_km', 'rating', 'max_daily_leads', 'leads_today', 'is_active', 'is_verified', 'credits', 'availability'] as const) {
