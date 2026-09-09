@@ -12,12 +12,15 @@ export function middleware(req: NextRequest) {
   if (!token) return NextResponse.next();
 
   const got = req.headers.get('x-admin-token') || req.cookies.get('admin_token')?.value || searchParams.get('token') || req.headers.get('authorization')?.replace('Bearer ', '');
-  if (got === token) return NextResponse.next();
+  if (got === token) {
+    const res = NextResponse.next();
+    res.headers.set('X-Robots-Tag', 'noindex, nofollow');
+    return res;
+  }
 
-  // Per UX admin: se manca token, chiedi con 401 Basic Auth
-  return new NextResponse('Admin riservato — token mancante', {
+  return new NextResponse('Admin riservato — area a parte, solo tu', {
     status: 401,
-    headers: { 'WWW-Authenticate': 'Basic realm="STROBE Admin"' },
+    headers: { 'WWW-Authenticate': 'Basic realm="STROBE Admin"', 'X-Robots-Tag': 'noindex, nofollow' },
   });
 }
 
