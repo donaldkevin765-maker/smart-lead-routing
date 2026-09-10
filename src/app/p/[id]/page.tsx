@@ -1,5 +1,6 @@
 import { notFound } from 'next/navigation';
 import { getSupabaseServer } from '@/lib/supabase';
+import UltraImage from '@/components/UltraImage';
 import PartnerContactBox from '@/components/PartnerContactBox';
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }) {
@@ -25,17 +26,10 @@ export default async function PartnerPage({ params }: { params: Promise<{ id: st
   const simili = (similari || []) as { id: string; name: string; services_offered: string[]; rating: number; is_verified: boolean }[];
 
   const isGym = p.services_offered.includes('palestra');
-  const gallery = isGym
-    ? [
-        'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=1200&q=80',
-        'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&w=1200&q=80',
-        'https://images.unsplash.com/photo-1593079831268-3381b0db4a77?auto=format&fit=crop&w=1200&q=80',
-      ]
-    : [
-        'https://images.unsplash.com/photo-1585704032915-c3400ca199e7?auto=format&fit=crop&w=1200&q=80',
-        'https://images.unsplash.com/photo-1607472586893-edb57bdc0e39?auto=format&fit=crop&w=1200&q=80',
-        'https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&w=1200&q=80',
-      ];
+  // Ultra-realistiche fino a 8K — id Unsplash, qualità massima senza intaccare (il browser sceglie)
+  const galleryIds = isGym
+    ? ['photo-1534438327276-14e5300c3a48', 'photo-1571019613454-1cb2f99b2d8b', 'photo-1593079831268-3381b0db4a77']
+    : ['photo-1585704032915-c3400ca199e7', 'photo-1607472586893-edb57bdc0e39', 'photo-1621905251189-08b45d6a269e'];
 
   return (
     <div>
@@ -68,14 +62,14 @@ export default async function PartnerPage({ params }: { params: Promise<{ id: st
       <style>{`@media(min-width:768px){.strobe-gallery{grid-template-columns:repeat(3,1fr)!important;overflow:visible!important}}`}</style>
       <div className="strobe-gallery" style={{ display: 'grid', gap: 12, marginTop: 16 }}>
         <div style={{ display: 'flex', gap: 12, overflowX: 'auto', scrollSnapType: 'x mandatory', gridColumn: '1/-1', paddingBottom: 4 }}>
-          {gallery.map((src) => (
-            <div key={src} style={{ flex: '0 0 88%', scrollSnapAlign: 'start', borderRadius: 18, overflow: 'hidden', height: 380 }}>
-              <img src={src} srcSet={`${src}&w=640 640w, ${src}&w=1024 1024w, ${src}&w=1920 1920w`} sizes="(max-width:768px) 88vw, 380px" alt="" width={1200} height={800} loading="lazy" decoding="async" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+          {galleryIds.map((uid, i) => (
+            <div key={uid} style={{ flex: '0 0 88%', scrollSnapAlign: 'start', borderRadius: 18, overflow: 'hidden', height: 380 }}>
+              <UltraImage id={uid} alt={`${p.name} — foto ${i + 1}`} width={1920} height={1280} aboveFold={i === 0} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
             </div>
           ))}
         </div>
       </div>
-      <p className="muted" style={{ fontSize: 11, marginTop: 6 }}>Foto reali attività — swipe su mobile, griglia su desktop</p>
+      <p className="muted" style={{ fontSize: 11, marginTop: 6 }}>Ultra-realistiche fino a 8K — qualità massima se il dispositivo lo consente, senza intaccare</p>
 
       {/* Struttura completa a 2 colonne */}
       <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 0.8fr', gap: 16, marginTop: 16 }}>
