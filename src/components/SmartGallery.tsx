@@ -1,5 +1,6 @@
 'use client';
 import { useEffect, useState } from 'react';
+import { photoUrl } from '@/lib/photoStandard';
 
 type Seed = string;
 
@@ -38,7 +39,7 @@ export default function SmartGallery({ seeds }: { seeds: Seed[] }) {
       {ordered.map((seed, i) => (
         <img
           key={seed}
-          src={`https://picsum.photos/seed/${seed}/900/600?blur=2`}
+          src={photoUrl(seed, 900, 600, 2)}
           alt=""
           width={900}
           height={600}

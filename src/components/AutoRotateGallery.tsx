@@ -1,5 +1,6 @@
 'use client';
 import { useEffect, useState } from 'react';
+import { photoUrl } from '@/lib/photoStandard';
 
 export default function AutoRotateGallery({ seeds, intervalMs = 4000 }: { seeds: string[]; intervalMs?: number }) {
   const [idx, setIdx] = useState(0);
@@ -13,7 +14,7 @@ export default function AutoRotateGallery({ seeds, intervalMs = 4000 }: { seeds:
       {seeds.map((seed, i) => (
         <img
           key={seed}
-          src={`https://picsum.photos/seed/${seed}/900/600?blur=2`}
+          src={photoUrl(seed, 900, 600, 2)}
           alt=""
           width={900}
           height={600}

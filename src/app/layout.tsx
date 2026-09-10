@@ -29,7 +29,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
         {/* Footer STROBE premium — progettato sul contesto: routing vicino, fiducia, Monza Brianza */}
         <footer style={{ borderTop: '1px solid var(--card-border)', marginTop: 64, background: '#fff' }}>
-          <div style={{ maxWidth: 980, margin: '0 auto', padding: '40px 22px 20px', display: 'grid', gridTemplateColumns: '1.2fr 1fr 1fr 1.4fr', gap: 32 }}>
+          <style>{`@media(max-width:640px){.footer-grid{grid-template-columns:1fr 1fr!important;gap:20px!important}.footer-news{grid-column:1/-1}}`}</style>
+          <div className="footer-grid" style={{ maxWidth: 980, margin: '0 auto', padding: '40px 22px 20px', display: 'grid', gridTemplateColumns: '1.2fr 1fr 1fr 1.4fr', gap: 32 }}>
             <div>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
                 <span className="brand-dot" />
@@ -58,7 +59,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 <li><a href="/termini" style={linkStyle}>Termini e Condizioni</a></li>
               </ul>
             </div>
-            <div>
+            <div className="footer-news">
               <p style={{ fontWeight: 700, fontSize: 11, letterSpacing: '0.06em', textTransform: 'uppercase', margin: '0 0 10px', color: 'var(--text)' }}>Resta aggiornato</p>
               <p style={{ fontSize: 13, color: 'var(--muted)', margin: '0 0 10px' }}>Nuovi servizi e partner vicino a te.</p>
               <form action="mailto:infostrobe5@gmail.com" method="post" encType="text/plain" style={{ display: 'flex', gap: 6 }}>

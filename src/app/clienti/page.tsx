@@ -1,5 +1,6 @@
 'use client';
 import { useEffect, useState } from 'react';
+import { photoUrl } from '@/lib/photoStandard';
 
 interface P { id: string; name: string; services_offered: string[]; rating: number; is_verified: boolean; credits: number; }
 
@@ -39,7 +40,7 @@ export default function ClientiPage() {
         {filtrati.map((p) => (
           <a key={p.id} href={`/p/${p.id}`} style={{ textDecoration: 'none', color: 'var(--text)', background: '#fff', border: '1px solid var(--card-border)', borderRadius: 18, overflow: 'hidden', display: 'block', transition: 'transform 0.15s' }}>
             <div style={{ height: 160, background: '#f5f5f7' }}>
-              <img src={`https://picsum.photos/seed/${p.id.slice(0, 6)}/600/340?blur=2`} alt="" width={600} height={340} style={{ width: '100%', height: '100%', objectFit: 'cover' }} loading="lazy" />
+              <img src={photoUrl(p.id.slice(0, 6), 600, 340, 2)} alt="" width={600} height={340} style={{ width: '100%', height: '100%', objectFit: 'cover' }} loading="lazy" />
             </div>
             <div style={{ padding: 16 }}>
               <div style={{ display: 'flex', gap: 6, alignItems: 'center', flexWrap: 'wrap' }}>
