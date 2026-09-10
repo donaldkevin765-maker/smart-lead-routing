@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { qualifyLead } from '@/lib/gemini';
 import { getSupabaseServer } from '@/lib/supabase';
+import { buildBotPrompt } from '@/lib/botRules';
 
 // Chat BOT: capisce cosa vuole l'utente, riassume in breve e risponde SOLO con dati ufficiali.
 // WHY fiducia: mai inventare orari/servizi — solo DB verificato + siti ufficiali. Se manca il dato, lo dice.
@@ -37,10 +38,8 @@ export async function POST(req: Request) {
     const { GoogleGenerativeAI } = await import('@google/generative-ai');
     const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
     const model = genAI.getGenerativeModel({ model: 'gemini-3.1-flash-lite-preview' });
-    const prompt =
-      `Sei il bot STROBE. Rispondi in italiano, massimo 3 righe brevi. ` +
-      `Riassumi cosa vuole l'utente in 1 riga, poi rispondi usando ESCLUSIVAMENTE questi dati ufficiali (non inventare mai orari, prezzi o servizi): ${official || 'nessun dato ufficiale disponibile — dillo e proponi di inviare richiesta'}. ` +
-      `Messaggio utente: "${message.trim().replace(/"/g, "'")}" — servizio rilevato: ${q.service}, urgenza: ${q.urgency}.`;
+    // Regole e standard obbligatori da botRules — il bot sa dove mandare, se mandare o fare
+    const prompt = buildBotPrompt(message.trim(), official, q.service, q.urgency);
     const result = await model.generateContent(prompt);
     const reply = result.response.text().replace(/```/g, '').trim().slice(0, 600);
 
