@@ -16,14 +16,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     changeFrequency: 'weekly' as const,
     priority: 0.9,
   }));
-  let partners: { url: string; lastModified: Date; changeFrequency: 'monthly' as const; priority: number }[] = [];
+  type P = { url: string; lastModified: Date; changeFrequency: 'monthly'; priority: number };
+  let partners: P[] = [];
   try {
     const { getSupabaseServer } = await import('@/lib/supabase');
     const { data } = await getSupabaseServer().from('partners').select('id').eq('is_active', true);
-    partners = ((data || []) as { id: string }[]).map((p) => ({
+    partners = ((data || []) as { id: string }[]).map((p): P => ({
       url: `${BASE}/p/${p.id}`,
       lastModified: new Date(),
-      changeFrequency: 'monthly' as const,
+      changeFrequency: 'monthly',
       priority: 0.7,
     }));
   } catch {}
