@@ -36,7 +36,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 <strong style={{ fontSize: 15, letterSpacing: '-0.01em' }}>STROBE</strong>
               </div>
               <p style={{ fontSize: 13, color: 'var(--muted)', lineHeight: 1.5, margin: 0 }}>
-                Il professionista giusto, vicino a te. Routing geolocalizzato Monza Brianza — paghi solo se accetti.
+                Il professionista giusto, vicino a te. Routing geolocalizzato Monza Brianza.
               </p>
               <p style={{ fontSize: 12, color: 'var(--muted)', marginTop: 10 }}>📍 Monza Brianza · ✉️ <a href="mailto:infostrobe5@gmail.com" style={linkStyle}>infostrobe5@gmail.com</a></p>
             </div>
@@ -46,7 +46,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 <li><a href="/problemi" style={linkStyle}>FAQ — problemi comuni</a></li>
                 <li><a href="/clienti" style={linkStyle}>Tracking richiesta</a></li>
                 <li><a href="mailto:infostrobe5@gmail.com" style={linkStyle}>Contattaci</a></li>
-                <li><a href="/termini" style={{ ...linkStyle }}>Garanzia — paghi solo se accetti</a></li>
+                <li><a href="/termini" style={{ ...linkStyle }}>Garanzia STROBE</a></li>
               </ul>
             </div>
             <div>
