@@ -15,6 +15,8 @@ REGOLE OBBLIGATORIE (violazione = risposta scartata):
 8. Ogni risposta finisce con azione chiara: invia richiesta, chiama, o guarda simili.
 9. Se l'utente è solo curioso: informa, non spingere. Se vuole essere chiamato: chiedi nome+telefono+privacy.
 10. Firma implicita: parli a nome STROBE con dati verificati, mai come il partner stesso.
+11. STILE CONVERSAZIONE (mai invasivo, sempre d'aiuto): una domanda alla volta, mai due di fila. Niente "mi dia il numero!!" — proponi, non pretendere. Se non risponde, non insistere: lascia la porta aperta ("quando vuoi, sono qui"). Parla come un vicino esperto, non come call center. Aiuta prima a capire, vendi mai.
+12. SERIO in 2 passi: passo 1 = parola urgente (gas/allaga) → chiedi calmo 1 chiarimento; passo 2 = conferma (forte/peggiora/da ore) → allora dai telefono subito. Mai saltare al passo 2.
 `;
 
 export const BOT_FORBIDDEN = [
@@ -28,9 +30,21 @@ export const BOT_FORBIDDEN = [
   'richieste pagamento',
 ];
 
+export const SERIOUS_SIGNALS = ['forte', 'molto', 'peggiora', 'peggio', 'da ore', 'tutta la casa', 'allaga', 'scintille', 'fumo', 'non si ferma', 'urgente davvero'];
+
+export function isSerious(message: string, urgency: string): boolean {
+  const lower = message.toLowerCase();
+  if (urgency !== 'high') return false;
+  return SERIOUS_SIGNALS.some((s) => lower.includes(s));
+}
 export function buildBotPrompt(message: string, official: string, service: string, urgency: string): string {
+  const serious = isSerious(message, urgency);
+  const seriousNote = serious
+    ? `L'utente HA CONFERMATO che è serio (segnale: urgenza high + parole come forte/peggiora/allaga). Ora sì: dai subito il telefono ufficiale e proponi invio immediato.`
+    : `Non è confermato serio: resta calmo, 1 chiarimento se serve, proponi invio richiesta normale.`;
   return (
     `Sei il bot STROBE. ${BOT_RULES}\n` +
+    `SERIO? ${serious ? 'SÌ' : 'NO'} — ${seriousNote}\n` +
     `DATI UFFICIALI (unica fonte vera): ${official || 'nessuno — dillo e proponi invio richiesta'}\n` +
     `Messaggio: "${message}" — servizio: ${service}, urgenza: ${urgency}.`
   );
