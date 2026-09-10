@@ -137,6 +137,13 @@ export default async function PartnerPage({ params }: { params: Promise<{ id: st
       {/* Spazio comunicazione — scrivi cosa ti serve, AI/bot categorizza in base a cosa gli serve */}
       <PartnerContactBox partnerId={p.id} service={p.services_offered[0]} />
 
+      {/* Info nostre — in fondo alla pagina standard */}
+      <div className="card" style={{ background: '#fbfbfd', borderStyle: 'dashed' }}>
+        <h3 style={{ marginTop: 0, fontSize: 14, letterSpacing: '0.04em' }}>STROBE — Monza Brianza</h3>
+        <p className="muted" style={{ fontSize: 12, margin: '4px 0 0' }}>Piattaforma di routing geolocalizzato · Servizio clienti: <a href="mailto:infostrobe5@gmail.com" style={{ color: 'var(--text)' }}>infostrobe5@gmail.com</a> · <a href="https://shop-brianza.com" target="_blank" rel="noopener" style={{ color: 'var(--text)' }}>shop-brianza.com</a></p>
+        <p className="muted" style={{ fontSize: 11, marginTop: 6 }}>© STROBE — Tutti i diritti riservati · Privacy · Termini · Contatti</p>
+      </div>
+
       {/* Altri simili a quello che cerchi — stessa struttura, stesso standard */}
       {simili.length > 0 && (
         <div className="card">
