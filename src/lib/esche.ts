@@ -17,7 +17,7 @@ type Esca = {
 const ESCHE: Esca[] = [
   {
     slug: 'caldaia-bloccata-monza',
-    gallery: ['strobe-caldaia-1', 'strobe-caldaia-2', 'strobe-caldaia-3','strobe-caldaia-4'],
+    gallery: ['photo-1585704032915-c3400ca199e7','photo-1607472586893-edb57bdc0e39','photo-1615874959474-d609969a20ed','photo-1621905251189-08b45d6a269e'],
     title: 'Caldaia bloccata a Monza: errore E35, cosa fare subito',
     h1: 'Caldaia bloccata a Monza — errore E35 e perdita',
     service: 'caldaia',
@@ -36,7 +36,7 @@ const ESCHE: Esca[] = [
   },
   {
     slug: 'perdita-acqua-sotto-lavello-monza',
-    gallery: ['strobe-idraulica-1', 'strobe-idraulica-2', 'strobe-idraulica-3','strobe-idraulica-4'],
+    gallery: ['photo-1585704032915-c3400ca199e7','photo-1607472586893-edb57bdc0e39','photo-1621905252507-b35492cc74b4','photo-1558618666-fcd25c85cd64'],
     title: 'Perdita acqua sotto lavello a Monza: cosa fare',
     h1: 'Perdita acqua sotto il lavello a Monza',
     service: 'idraulica',
@@ -54,7 +54,7 @@ const ESCHE: Esca[] = [
   },
   {
     slug: 'palestra-con-sauna-monza',
-    gallery: ['strobe-trainer-primo-piano', 'strobe-cliente-primo-piano', 'strobe-palestra-3','strobe-palestra-4'],
+    gallery: ['photo-1534438327276-14e5300c3a48','photo-1571019613454-1cb2f99b2d8b','photo-1593079831268-3381b0db4a77','photo-1517836357463-d25dfeac3438'],
     title: 'Palestra con sauna a Monza: prova vicino a te',
     h1: 'Palestra con sauna a Monza',
     service: 'palestra',
@@ -72,7 +72,7 @@ const ESCHE: Esca[] = [
   },
   {
     slug: 'parrucchiere-donna-monza',
-    gallery: ['strobe-parrucchiere-1', 'strobe-parrucchiere-2', 'strobe-parrucchiere-3','strobe-parrucchiere-4'],
+    gallery: ['photo-1560066984-138dadb4c035','photo-1521590832167-7bcbfaa6381f','photo-1580618672591-eb180b1a973f','photo-1522337660859-02fbefca4702'],
     title: 'Parrucchiere donna a Monza: taglio e colore',
     h1: 'Parrucchiere donna a Monza',
     service: 'parrucchiere',
@@ -87,7 +87,7 @@ const ESCHE: Esca[] = [
   },
   {
     slug: 'pulizie-casa-monza',
-    gallery: ['strobe-pulizie-1', 'strobe-pulizie-2', 'strobe-pulizie-3','strobe-pulizie-4'],
+    gallery: ['photo-1581578731548-c64695cc6952','photo-1584820927498-cfe5211fd8bf','photo-1563453392212-326f5e854473','photo-1528740561666-dc2479dc08ab'],
     title: 'Pulizie casa a Monza: domestica e condominio',
     h1: 'Pulizie casa a Monza',
     service: 'pulizie',
@@ -102,7 +102,7 @@ const ESCHE: Esca[] = [
   },
   {
     slug: 'trasloco-monza-brianza',
-    gallery: ['strobe-trasloco-1', 'strobe-trasloco-2', 'strobe-trasloco-3','strobe-trasloco-4'],
+    gallery: ['photo-1600518464441-9154a4dea21b','photo-1586864387967-d02ef85d93e8','photo-1600585152220-90363fe7e115','photo-1560518883-ce09059eeffa'],
     title: 'Trasloco a Monza e Brianza: preventivo veloce',
     h1: 'Trasloco a Monza e Brianza',
     service: 'traslochi',
@@ -117,7 +117,7 @@ const ESCHE: Esca[] = [
   },
   {
     slug: 'elettricista-monza-urgenza',
-    gallery: ['strobe-elettricista-1', 'strobe-elettricista-2', 'strobe-elettricista-3','strobe-elettricista-4'],
+    gallery: ['photo-1621905251189-08b45d6a269e','photo-1621905252507-b35492cc74b4','photo-1558618666-fcd25c85cd64','photo-1585704032915-c3400ca199e7'],
     title: 'Elettricista a Monza: corto e salvavita che salta',
     h1: 'Elettricista a Monza — salvavita che salta',
     service: 'elettricista',
@@ -132,7 +132,7 @@ const ESCHE: Esca[] = [
   },
   {
     slug: 'climatizzazione-monza',
-    gallery: ['strobe-clima-1', 'strobe-clima-2', 'strobe-clima-3','strobe-clima-4'],
+    gallery: ['photo-1615874959474-d609969a20ed','photo-1615873968403-89e068629265','photo-1621905251189-08b45d6a269e','photo-1607472586893-edb57bdc0e39'],
     title: 'Climatizzazione a Monza: installazione e ricarica',
     h1: 'Climatizzazione a Monza',
     service: 'climatizzazione',
@@ -147,7 +147,7 @@ const ESCHE: Esca[] = [
   },
   {
     slug: 'massaggi-decontratturante-monza',
-    gallery: ['strobe-massaggi-1', 'strobe-massaggi-2', 'strobe-massaggi-3','strobe-massaggi-4'],
+    gallery: ['photo-1600334129128-685c5582fd35','photo-1544161515-4ab6ce6db874','photo-1540555700478-4be289fbecef','photo-1600334129128-685c5582fd35'],
     title: 'Massaggi decontratturante a Monza',
     h1: 'Massaggi decontratturante a Monza',
     service: 'massaggi',
@@ -162,7 +162,7 @@ const ESCHE: Esca[] = [
   },
   {
     slug: 'giardinaggio-monza-potatura',
-    gallery: ['strobe-giardino-1', 'strobe-giardino-2', 'strobe-giardino-3','strobe-giardino-4'],
+    gallery: ['photo-1416879595882-3373a0480b5b','photo-1558904541-efa843a96f01','photo-1466692476868-aef1dfb1e735','photo-1592150621744-aca64f48394a'],
     title: 'Giardinaggio a Monza: potatura e prato',
     h1: 'Giardinaggio a Monza — potatura e prato',
     service: 'giardinaggio',

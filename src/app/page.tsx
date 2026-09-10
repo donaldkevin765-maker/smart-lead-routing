@@ -116,7 +116,7 @@ export default function HomePage() {
         <p>Descrivi il problema in parole tue. Troviamo lo specialista più vicino e disponibile.</p>
         {/* Sistema automatizzato — 4 foto che girano da sole, sempre aggiornate */}
         <div style={{ marginTop: 16 }}>
-          <AutoRotateGallery seeds={['strobe-casa-1', 'strobe-fitness-1', 'strobe-benessere-1', 'strobe-servizi-1']} intervalMs={3500} />
+          <AutoRotateGallery seeds={['photo-1585704032915-c3400ca199e7', 'photo-1534438327276-14e5300c3a48', 'photo-1560066984-138dadb4c035', 'photo-1581578731548-c64695cc6952']} intervalMs={3500} />
           <p className="muted" style={{ fontSize: 11, marginTop: 6 }}>4 foto per settore che girano automaticamente — cerca foto via CC0 e sostituzione periodica</p>
         </div>
         <p className="muted" style={{ fontSize: 12, marginTop: 8 }}>Prova SEO: <a href="/problemi/palestra-con-sauna-monza">palestra</a> · <a href="/problemi/caldaia-bloccata-monza">caldaia</a> · <a href="/problemi/parrucchiere-donna-monza">parrucchiere</a> — ogni pagina apre già il settore cercato</p>

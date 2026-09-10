@@ -1,6 +1,6 @@
 'use client';
 import { useEffect, useState } from 'react';
-import { photoUrl } from '@/lib/photoStandard';
+import { galleryUrl, workerSrcSet } from '@/lib/photoStandard';
 
 type Seed = string;
 
@@ -39,7 +39,9 @@ export default function SmartGallery({ seeds }: { seeds: Seed[] }) {
       {ordered.map((seed, i) => (
         <img
           key={seed}
-          src={photoUrl(seed, 900, 600, 2)}
+          src={galleryUrl(seed, 900, 600)}
+          srcSet={seed.startsWith('photo-') ? workerSrcSet(seed) : undefined}
+          sizes={seed.startsWith('photo-') ? '(max-width: 640px) 640px, (max-width: 1024px) 1024px, 1920px' : undefined}
           alt=""
           width={900}
           height={600}

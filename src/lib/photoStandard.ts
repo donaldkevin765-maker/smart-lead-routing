@@ -42,6 +42,22 @@ export function photoUrl(seed: string, w = 900, h = 600, blur = 2): string {
   return `https://picsum.photos/seed/${seed}/${w}/${h}?blur=${blur}`;
 }
 
+/** Foto lavoratore reale del settore (Unsplash ID verificato 200) — solo settore pertinente */
+export function workerUrl(photoId: string, w = 900): string {
+  return `https://images.unsplash.com/${photoId}?auto=format&fit=crop&w=${w}&q=80`;
+}
+
+/** srcSet HQ per lavoratori reali — 8K solo se il dispositivo lo consente */
+export function workerSrcSet(photoId: string): string {
+  return [640, 1024, 1920, 3840, 7680].map((w) => `${workerUrl(photoId, w)} ${w}w`).join(', ');
+}
+
+/** Dispatcher: Unsplash ID (photo-...) o seed picsum — mai foto fuori settore */
+export function galleryUrl(entry: string, w = 900, h = 600): string {
+  if (entry.startsWith('photo-')) return workerUrl(entry, w);
+  return photoUrl(entry, w, h, 2);
+}
+
 /** Checklist umana per foto partner caricate (prima di Verifica in admin) */
 export const PHOTO_CHECKLIST = [
   'Primo piano grande, soggetto chiaro in 1 secondo',
