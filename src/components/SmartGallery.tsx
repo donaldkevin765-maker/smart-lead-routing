@@ -1,6 +1,6 @@
 'use client';
 import { useEffect, useState } from 'react';
-import { galleryUrl, workerSrcSet } from '@/lib/photoStandard';
+import { galleryUrl, workerSrcSet, rankPhotos } from '@/lib/photoStandard';
 
 type Seed = string;
 
@@ -8,17 +8,11 @@ export default function SmartGallery({ seeds }: { seeds: Seed[] }) {
   const [ordered, setOrdered] = useState<Seed[]>(seeds);
   const [idx, setIdx] = useState(0);
 
-  // All'accesso: mostra prima la foto relativa a cosa ha cercato su SEO (query → seed)
+  // ALGORITMO SEO-FOTO: ordina per cosa ha cercato l'utente (?q/prompt) vs tag foto
   useEffect(() => {
     try {
-      const q = (new URLSearchParams(window.location.search).get('q') || new URLSearchParams(window.location.search).get('prompt') || '').toLowerCase();
-      let sorted = [...seeds];
-      if (q) {
-        // keyword → seed: se la query contiene parola, porta quel seed in prima posizione
-        const hit = seeds.find((s) => q.includes(s.split('-')[1]) || q.includes(s.split('-').pop() || ''));
-        if (hit) sorted = [hit, ...seeds.filter((s) => s !== hit)];
-      }
-      setOrdered(sorted);
+      const q = new URLSearchParams(window.location.search).get('q') || new URLSearchParams(window.location.search).get('prompt') || '';
+      setOrdered(rankPhotos(seeds, q));
       setIdx(0);
     } catch {}
   }, [seeds.join(',')]);
