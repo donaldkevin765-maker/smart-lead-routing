@@ -7,17 +7,22 @@ export default function PartnerContactBox({ partnerId, service }: { partnerId: s
   const [phone, setPhone] = useState('');
   const [privacy, setPrivacy] = useState(false);
   const [cat, setCat] = useState<{ service: string; urgency: string; summary: string } | null>(null);
+  const [botReply, setBotReply] = useState('');
   const [loading, setLoading] = useState(false);
   const [msg, setMsg] = useState('');
 
   async function categorize() {
     if (prompt.trim().length < 10) { setMsg('Scrivi almeno 10 caratteri'); return; }
-    setLoading(true); setMsg('');
+    setLoading(true); setMsg(''); setBotReply('');
     try {
-      const r = await fetch('/api/qualify-lead', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ prompt }) });
+      // Chat BOT: capisce + riassume in breve + risponde solo con dati ufficiali del partner
+      const r = await fetch('/api/chat', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ message: prompt, partnerId }) });
       const j = await r.json();
-      if (j.success) { setCat(j.qualification); setMsg(`Categorizzato: ${j.qualification.service} · ${j.qualification.urgency}`); }
-      else setMsg(j.error);
+      if (j.success) {
+        setCat(j.qualification);
+        setBotReply(j.reply + (j.grounded ? '' : ' (dati ufficiali in verifica)'));
+        setMsg('');
+      } else setMsg(j.error);
     } catch (e) { setMsg((e as Error).message); }
     finally { setLoading(false); }
   }
@@ -55,6 +60,12 @@ export default function PartnerContactBox({ partnerId, service }: { partnerId: s
         <button className="btn btn-secondary" onClick={categorize} disabled={loading || prompt.trim().length < 10} style={{ borderRadius: 999, padding: '11px 20px', fontSize: 14, fontWeight: 600 }}>{loading ? '...' : 'Vedi chi può aiutarmi'}</button>
         {cat && <span style={{ fontSize: 13, background: 'var(--success-bg)', color: 'var(--success)', padding: '6px 12px', borderRadius: 999, fontWeight: 600 }}>→ {cat.service} · {cat.urgency}</span>}
       </div>
+      {botReply && (
+        <div style={{ marginTop: 12, background: '#fbfbfd', border: '1px solid var(--card-border)', borderRadius: 12, padding: '10px 12px', fontSize: 13, lineHeight: 1.5 }}>
+          <strong style={{ fontSize: 12 }}>STROBE bot · da dati ufficiali verificati</strong>
+          <p style={{ margin: '6px 0 0' }}>{botReply}</p>
+        </div>
+      )}
 
       {cat && (
         <div style={{ marginTop: 16, paddingTop: 16, borderTop: '1px solid var(--card-border)', animation: 'rise 0.3s var(--spring)' }}>
