@@ -89,7 +89,7 @@ export async function PATCH(req: Request) {
       return NextResponse.json({ success: false, error: 'Disponibilità formato errato' }, { status: 400 });
     const sb = getSupabaseServer();
     const update: Record<string, unknown> = {};
-    for (const k of ['name', 'email', 'phone', 'telegram_chat_id', 'services_offered', 'coverage_radius_km', 'rating', 'max_daily_leads', 'leads_today', 'is_active', 'is_verified', 'credits', 'availability'] as const) {
+    for (const k of ['name', 'email', 'phone', 'telegram_chat_id', 'services_offered', 'coverage_radius_km', 'rating', 'max_daily_leads', 'leads_today', 'is_active', 'is_verified', 'credits', 'availability', 'logo_url', 'brand_color', 'description', 'photos'] as const) {
       if (b[k] !== undefined) update[k] = b[k];
     }
     if (typeof b.lat === 'number' && typeof b.lon === 'number') update.location = point(b.lat as number, b.lon as number);

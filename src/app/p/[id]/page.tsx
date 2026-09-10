@@ -17,38 +17,43 @@ export default async function PartnerPage({ params }: { params: Promise<{ id: st
   const sb = getSupabaseServer();
   const { data } = await sb.from('partners').select('*').eq('id', id).single();
   const p = data as {
-    id: string; name: string; email: string; phone: string; services_offered: string[]; rating: number; is_verified: boolean; credits: number; coverage_radius_km: number; created_at: string; availability: Record<string, string[]> | null; location: string;
+    id: string; name: string; email: string; phone: string; services_offered: string[]; rating: number; is_verified: boolean; credits: number; coverage_radius_km: number; created_at: string; availability: Record<string, string[]> | null; location: string; logo_url: string | null; brand_color: string | null; description: string | null; photos: string[] | null;
   } | null;
   if (!p) notFound();
+  // Personalizzazione partner: logo, colore, descrizione, foto sue — fallback standard STROBE ordinato
+  const brand = p.brand_color || '#0071e3';
 
   // Simili: stesso servizio, stesso standard
   const { data: similari } = await sb.from('partners').select('id,name,services_offered,rating,is_verified').contains('services_offered', [p.services_offered[0]]).neq('id', p.id).limit(3);
   const simili = (similari || []) as { id: string; name: string; services_offered: string[]; rating: number; is_verified: boolean }[];
 
   const isGym = p.services_offered.includes('palestra');
-  // Ultra-realistiche fino a 8K — id Unsplash, qualità massima senza intaccare (il browser sceglie)
-  const galleryIds = isGym
+  // Ultra-realistiche fino a 8K — foto SUE se caricate, altrimenti standard di settore
+  const galleryIds = p.photos && p.photos.length > 0 ? p.photos : isGym
     ? ['photo-1534438327276-14e5300c3a48', 'photo-1571019613454-1cb2f99b2d8b', 'photo-1593079831268-3381b0db4a77']
     : ['photo-1585704032915-c3400ca199e7', 'photo-1607472586893-edb57bdc0e39', 'photo-1621905251189-08b45d6a269e'];
 
   return (
     <div>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({ '@context': 'https://schema.org', '@type': 'LocalBusiness', name: p.name, email: p.email, telephone: p.phone, aggregateRating: { '@type': 'AggregateRating', ratingValue: p.rating, reviewCount: 10 } }) }} />
       {/* Breadcrumb */}
       <p className="muted" style={{ fontSize: 12, margin: '8px 0 0' }}>
         <a href="/" style={{ color: 'var(--muted)' }}>Home</a> · <a href="/problemi" style={{ color: 'var(--muted)' }}>Problemi</a> · <span style={{ color: 'var(--text)' }}>{p.name}</span>
       </p>
 
-      {/* Hero chiaro */}
+      {/* Hero chiaro — logo e colore SUOI se impostati, altrimenti standard */}
       <div className="hero" style={{ padding: '16px 0 8px', textAlign: 'left' }}>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, alignItems: 'center' }}>
+          {p.logo_url && <img src={p.logo_url} alt={`${p.name} logo`} width={44} height={44} style={{ borderRadius: 10, objectFit: 'cover' }} />}
           <h1 style={{ margin: 0, fontSize: 'clamp(24px,4vw,36px)' }}>{p.name}</h1>
-          {p.is_verified && <span style={{ fontSize: 13, background: 'var(--accent-soft)', color: 'var(--accent)', padding: '4px 10px', borderRadius: 999, fontWeight: 600 }}>✓ Verificato STROBE</span>}
+          {p.is_verified && <span style={{ fontSize: 13, background: 'var(--accent-soft)', color: brand, padding: '4px 10px', borderRadius: 999, fontWeight: 600 }}>✓ Verificato STROBE</span>}
           <span style={{ fontSize: 13, background: 'var(--success-bg)', color: 'var(--success)', padding: '4px 10px', borderRadius: 999 }}>{p.rating}★</span>
           <span style={{ fontSize: 12, background: '#f5f5f7', padding: '4px 10px', borderRadius: 999 }}>Disponibilità Verificata STROBE · {p.credits} crediti</span>
         </div>
         <p className="muted" style={{ margin: '8px 0 0', fontSize: 14 }}>
-          {p.services_offered.map((s) => <span key={s} className="chip on" style={{ marginRight: 6 }}>{s}</span>)} · Raggio {p.coverage_radius_km}km · Monza Brianza
+          {p.services_offered.map((s) => <span key={s} className="chip on" style={{ marginRight: 6, borderColor: brand, color: brand }}>{s}</span>)} · Raggio {p.coverage_radius_km}km · Monza Brianza
         </p>
+        {p.description && <p style={{ margin: '10px 0 0', fontSize: 14, lineHeight: 1.5 }}>{p.description}</p>}
         {/* Contatti sotto logo — telefono cliccabile per chiamare subito */}
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12, marginTop: 12, fontSize: 13, background: '#fff', border: '1px solid var(--card-border)', borderRadius: 12, padding: '10px 14px' }}>
           <a href={`tel:${p.phone.replace(/\s/g, '')}`} style={{ textDecoration: 'none', color: 'var(--text)', fontWeight: 600 }}>📞 {p.phone}</a>
