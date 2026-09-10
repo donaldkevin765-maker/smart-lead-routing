@@ -58,6 +58,28 @@ export function galleryUrl(entry: string, w = 900, h = 600): string {
   return photoUrl(entry, w, h, 2);
 }
 
+/** Cover per servizio — solo lavoratori del settore, mai generiche */
+export const SERVICE_COVER: Record<string, string> = {
+  palestra: 'photo-1534438327276-14e5300c3a48',
+  'personal-trainer': 'photo-1571019613454-1cb2f99b2d8b',
+  piscina: 'photo-1530549387789-4c1017266635',
+  idraulica: 'photo-1585704032915-c3400ca199e7',
+  caldaia: 'photo-1607472586893-edb57bdc0e39',
+  elettricista: 'photo-1621905251189-08b45d6a269e',
+  climatizzazione: 'photo-1615874959474-d609969a20ed',
+  parrucchiere: 'photo-1560066984-138dadb4c035',
+  estetista: 'photo-1540555700478-4be289fbecef',
+  massaggi: 'photo-1600334129128-685c5582fd35',
+  pulizie: 'photo-1581578731548-c64695cc6952',
+  traslochi: 'photo-1600518464441-9154a4dea21b',
+  giardinaggio: 'photo-1416879595882-3373a0480b5b',
+};
+
+export function coverFor(services: string[]): string {
+  for (const s of services) if (SERVICE_COVER[s]) return SERVICE_COVER[s];
+  return 'photo-1585704032915-c3400ca199e7';
+}
+
 /** Checklist umana per foto partner caricate (prima di Verifica in admin) */
 export const PHOTO_CHECKLIST = [
   'Primo piano grande, soggetto chiaro in 1 secondo',
