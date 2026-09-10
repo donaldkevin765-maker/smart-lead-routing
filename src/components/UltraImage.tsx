@@ -17,7 +17,8 @@ type Props = {
 };
 
 function u(id: string, w: number, fm: 'avif' | 'webp' | 'jpg'): string {
-  return `https://images.unsplash.com/${id}?auto=format&fit=crop&w=${w}&q=80&fm=${fm}`;
+  // Altissima qualità su hero (q=90), thumbs restano leggeri via sizes
+  return `https://images.unsplash.com/${id}?auto=format&fit=crop&w=${w}&q=90&fm=${fm}`;
 }
 
 function srcSet(id: string, fm: 'avif' | 'webp' | 'jpg'): string {

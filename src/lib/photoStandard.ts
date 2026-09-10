@@ -43,10 +43,10 @@ export function photoUrl(seed: string, w = 900, h = 600, blur = 2): string {
 }
 
 /** Foto lavoratore reale del settore (Unsplash ID verificato 200) — solo settore pertinente */
-export function workerUrl(photoId: string, w = 900): string {
+export function workerUrl(photoId: string, w = 900, q = 85): string {
   const [base, variant] = photoId.split('|');
   const crop = variant ? `&crop=${variant.split('=')[1] || 'entropy'}` : '';
-  return `https://images.unsplash.com/${base}?auto=format&fit=crop&w=${w}&q=80${crop}`;
+  return `https://images.unsplash.com/${base}?auto=format&fit=crop&w=${w}&q=${q}${crop}`;
 }
 
 /** srcSet HQ per lavoratori reali — 8K solo se il dispositivo lo consente */
