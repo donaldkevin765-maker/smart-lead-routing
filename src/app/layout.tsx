@@ -54,6 +54,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               <p style={{ fontWeight: 700, fontSize: 11, letterSpacing: '0.06em', textTransform: 'uppercase', margin: '0 0 10px', color: 'var(--text)' }}>STROBE</p>
               <ul style={{ listStyle: 'none', margin: 0, padding: 0, fontSize: 13.5, lineHeight: 2.1 }}>
                 <li><a href="/clienti" style={linkStyle}>I nostri clienti</a></li>
+                <li><a href="/landing" style={linkStyle}>Chi siamo</a></li>
                 <li><a href="/partner" style={linkStyle}>Diventa partner</a></li>
                 <li><a href="/privacy" style={linkStyle}>Privacy Policy</a></li>
                 <li><a href="/termini" style={linkStyle}>Termini e Condizioni</a></li>

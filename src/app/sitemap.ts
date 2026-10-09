@@ -4,7 +4,7 @@ import { getEsche } from '@/lib/esche';
 const BASE = 'https://smart-lead-routing.vercel.app';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const staticRoutes = ['', '/problemi', '/clienti', '/partner', '/privacy', '/termini'].map((r) => ({
+  const staticRoutes = ['', '/landing', '/problemi', '/clienti', '/partner', '/privacy', '/termini'].map((r) => ({
     url: `${BASE}${r || '/'}`,
     lastModified: new Date(),
     changeFrequency: 'weekly' as const,
