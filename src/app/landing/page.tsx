@@ -48,6 +48,10 @@ export default async function LandingPage() {
         description: 'STROBE collega chi ha un problema a chi sa risolverlo a Monza Brianza.',
         mainEntity: { '@type': 'Organization', name: 'STROBE', email: 'infostrobe5@gmail.com', areaServed: 'Monza e Brianza, Italia' },
       }) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
+        '@context': 'https://schema.org', '@type': 'FAQPage',
+        mainEntity: COPY.faq.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
+      }) }} />
 
       {/* 1 — HERO: una sola frase enorme */}
       <section style={{ padding: '56px 0 40px', maxWidth: 900 }}>
@@ -127,6 +131,12 @@ export default async function LandingPage() {
               {COPY.landingIdentity2}
             </p>
           </Reveal>
+          <Reveal delay={240}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 26, paddingTop: 18, borderTop: '1px solid var(--card-border)' }}>
+              <img src="/shop-brianza.svg" alt="Shop Brianza" width={44} height={28} style={{ opacity: 0.85 }} />
+              <span style={{ fontSize: 13, color: 'var(--muted)' }}>Un&rsquo;iniziativa di Shop Brianza</span>
+            </div>
+          </Reveal>
         </div>
       </section>
 
@@ -147,8 +157,8 @@ export default async function LandingPage() {
       {/* 7 — DUE PORTE */}
       <section style={{ display: 'grid', gap: 16, gridTemplateColumns: 'repeat(auto-fit,minmax(280px,1fr))', paddingBottom: 64 }}>
         {[
-          { ...COPY.doorUser, href: '/', primary: true },
-          { ...COPY.doorPartner, href: '/partner', primary: false },
+          { ...COPY.doorUser, primary: true },
+          { ...COPY.doorPartner, primary: false },
         ].map((x, i) => (
           <Reveal key={x.t} delay={i * 120}>
             <div className="card" style={{ padding: 28, height: '100%', display: 'flex', flexDirection: 'column', gap: 10 }}>
@@ -162,7 +172,22 @@ export default async function LandingPage() {
         ))}
       </section>
 
-      {/* 8 — CHIUSA */}
+      {/* 8 — FAQ: risposte nette, SEO Google + AI */}
+      <section style={{ paddingBottom: 48 }}>
+        <Reveal as="h2" delay={0}><span style={{ ...h2, display: 'block', fontSize: 'clamp(22px,3vw,32px)' }}>Domande frequenti</span></Reveal>
+        <div style={{ marginTop: 20 }}>
+          {COPY.faq.map((f, i) => (
+            <Reveal key={f.q} delay={i * 70}>
+              <details style={{ borderTop: '1px solid var(--card-border)', padding: '14px 0' }}>
+                <summary style={{ fontSize: 16, fontWeight: 600, cursor: 'pointer', letterSpacing: '-0.01em' }}>{f.q}</summary>
+                <p style={{ ...lead, fontSize: 15, margin: '10px 0 0' }}>{f.a}</p>
+              </details>
+            </Reveal>
+          ))}
+        </div>
+      </section>
+
+      {/* 9 — CHIUSA */}
       <section style={{ textAlign: 'center', padding: '56px 0 72px', borderTop: '1px solid var(--card-border)' }}>
         <Reveal as="h2" delay={0}><span style={{ ...h2, display: 'block' }}>{COPY.landingCloseTitle}</span></Reveal>
         <Reveal delay={120}>

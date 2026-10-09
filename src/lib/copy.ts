@@ -26,7 +26,15 @@ export const COPY = {
   ctaPartner: 'Lavoro con STROBE',
   ctaStart: 'Inizia',
 
-  // — Due porte —
-  doorUser: { t: 'Hai un problema', d: 'Una frase, 30 secondi. Guardare è libero, contattare è tua scelta.', cta: 'Racconta cosa ti serve' },
-  doorPartner: { t: 'Sei un professionista', d: 'Richieste già capite, dalla tua zona. Si paga solo quando porta un cliente.', cta: 'Entra nella rete' },
+  // — Due porte (sequenza: cliente → aziende, azienda → fondo registrazione) —
+  doorUser: { t: 'Cerchi qualcuno?', d: 'Guarda le aziende verificate della Brianza: orari, telefono, recensioni.', cta: 'Vedi le aziende', href: '/clienti' },
+  doorPartner: { t: 'Vuoi entrare nella rete?', d: 'Richieste già capite, dalla tua zona. Si paga solo quando porta un cliente.', cta: 'Registrati ora', href: '/partner' },
+
+  // — FAQ SEO (Google + AI): una risposta netta per domanda —
+  faq: [
+    { q: 'Cosa fa STROBE?', a: 'Tu scrivi il problema. STROBE trova il professionista verificato più adatto vicino a te e gli manda la richiesta. Se il primo non risponde, ci prova un altro in 15 minuti.' },
+    { q: 'Quanto costa?', a: 'Per chi cerca è gratis, sempre. Nessuna registrazione per guardare. I professionisti della rete pagano solo quando una richiesta diventa un cliente.' },
+    { q: 'Chi sono le aziende in rete?', a: 'Aziende reali di Monza e Brianza con dati ufficiali verificati: orari, telefono e zona coperta presi dal loro canale ufficiale.' },
+    { q: 'Devo lasciare i miei contatti?', a: 'No. Puoi solo guardare. I tuoi dati li dai solo se vuoi essere richiamato, e servono a quello e nient’altro.' },
+  ],
 } as const;
