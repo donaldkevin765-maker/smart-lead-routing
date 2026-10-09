@@ -1,4 +1,5 @@
 import { notFound } from 'next/navigation';
+import { headers } from 'next/headers';
 import { getSupabaseServer } from '@/lib/supabase';
 import UltraImage from '@/components/UltraImage';
 import PartnerContactBox from '@/components/PartnerContactBox';
@@ -7,9 +8,9 @@ import ReviewBox from '@/components/ReviewBox';
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const sb = getSupabaseServer();
-  const { data } = await sb.from('partners').select('name,services_offered').eq('id', id).single();
-  const p = data as { name: string; services_offered: string[] } | null;
-  if (!p) return {};
+  const { data } = await sb.from('partners').select('name,services_offered,is_active').eq('id', id).single();
+  const p = data as { name: string; services_offered: string[]; is_active: boolean } | null;
+  if (!p || !p.is_active) return {};
   return { title: `${p.name} — STROBE Monza Brianza`, description: `${p.name} — ${p.services_offered.join(', ')} a Monza Brianza. Pagina standard STROBE.` };
 }
 
@@ -18,9 +19,17 @@ export default async function PartnerPage({ params }: { params: Promise<{ id: st
   const sb = getSupabaseServer();
   const { data } = await sb.from('partners').select('*').eq('id', id).single();
   const p = data as {
-    id: string; name: string; email: string; phone: string; services_offered: string[]; rating: number; is_verified: boolean; credits: number; coverage_radius_km: number; created_at: string; availability: Record<string, string[]> | null; location: string; logo_url: string | null; brand_color: string | null; description: string | null; photos: string[] | null;
+    id: string; name: string; email: string; phone: string; services_offered: string[]; rating: number; is_verified: boolean; is_active: boolean; credits: number; coverage_radius_km: number; created_at: string; availability: Record<string, string[]> | null; location: string; logo_url: string | null; brand_color: string | null; description: string | null; photos: string[] | null;
   } | null;
   if (!p) notFound();
+  // WHY: 202 schede in coda non sono ancora nostri clienti — non escono a Google né ai visitatori.
+  // Si accendono con un click da /admin dopo il contatto reale. L'admin le vede col cookie admin.
+  if (!p.is_active) {
+    const t = process.env.ADMIN_TOKEN || '';
+    const h = await headers();
+    const isAdm = !t || h.get('x-admin-token') === t || (h.get('cookie') || '').includes(`admin_token=${t}`);
+    if (!isAdm) notFound();
+  }
   // Personalizzazione partner: logo, colore, descrizione, foto sue — fallback standard STROBE ordinato
   const brand = p.brand_color || '#0071e3';
 
@@ -30,7 +39,7 @@ export default async function PartnerPage({ params }: { params: Promise<{ id: st
   const avgRating = revs.length ? Math.round((revs.reduce((s, r) => s + r.rating, 0) / revs.length) * 10) / 10 : 0;
 
   // Simili: stesso servizio, stesso standard
-  const { data: similari } = await sb.from('partners').select('id,name,services_offered,rating,is_verified').contains('services_offered', [p.services_offered[0]]).neq('id', p.id).limit(3);
+  const { data: similari } = await sb.from('partners').select('id,name,services_offered,rating,is_verified').contains('services_offered', [p.services_offered[0]]).neq('id', p.id).eq('is_active', true).limit(3);
   const simili = (similari || []) as { id: string; name: string; services_offered: string[]; rating: number; is_verified: boolean }[];
 
   const isGym = p.services_offered.includes('palestra');

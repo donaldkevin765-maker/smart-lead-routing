@@ -2,15 +2,17 @@
 import { useEffect, useState } from 'react';
 import { galleryUrl, coverFor } from '@/lib/photoStandard';
 
-interface P { id: string; name: string; services_offered: string[]; rating: number; is_verified: boolean; credits: number; }
+interface P { id: string; name: string; services_offered: string[]; rating: number; is_verified: boolean; credits: number; is_active: boolean; }
 
 export default function ClientiPage() {
   const [partners, setPartners] = useState<P[]>([]);
   const [q, setQ] = useState('');
   const [filtro, setFiltro] = useState('tutti');
 
+  // WHY solo attivi: le 202 in coda sono "pronte al contatto", non ancora nostri clienti —
+  // mostrarle ora = rubrica telefonica. Si accendono con un click dopo il contatto.
   useEffect(() => {
-    fetch('/api/partners').then((r) => r.json()).then((j) => { if (j.success) setPartners(j.partners); });
+    fetch('/api/partners').then((r) => r.json()).then((j) => { if (j.success) setPartners(j.partners.filter((p: P) => p.is_active)); });
   }, []);
 
   const verticali = ['tutti', ...Array.from(new Set(partners.flatMap((p) => p.services_offered))).sort()];
@@ -26,7 +28,7 @@ export default function ClientiPage() {
       <div className="hero" style={{ padding: '24px 0 8px' }}>
         <span className="hero-eyebrow">STROBE · Rete verificata Monza Brianza</span>
         <h1>I nostri clienti</h1>
-        <p className="muted">7 partner, stesso standard premium — foto reali, orari ufficiali, MAPS gratuita. Clicca per vedere la pagina completa.</p>
+        <p className="muted">Partner verificati, stesso standard premium — foto reali, orari ufficiali, MAPS gratuita. Clicca per vedere la pagina completa.</p>
         <div style={{ display: 'flex', gap: 8, marginTop: 14, flexWrap: 'wrap' }}>
           <input className="input" value={q} onChange={(e) => setQ(e.target.value)} placeholder="Cerca palestra, idraulico, studio..." style={{ flex: 1, minWidth: 200 }} />
           <select className="select" value={filtro} onChange={(e) => setFiltro(e.target.value)} style={{ width: 180 }}>
