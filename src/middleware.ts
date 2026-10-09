@@ -25,6 +25,8 @@ export function middleware(req: NextRequest) {
   if (got === token) {
     const res = NextResponse.next();
     res.headers.set('X-Robots-Tag', 'noindex, nofollow');
+    // WHY: setta il cookie così le fetch admin (/api/partners PATCH) lo passano da sole
+    res.cookies.set('admin_token', token, { httpOnly: true, sameSite: 'lax', path: '/' });
     return res;
   }
 
@@ -35,5 +37,5 @@ export function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/admin/:path*', '/api/admin/:path*'],
+  matcher: ['/admin/:path*', '/api/admin/:path*', '/api/services'],
 };

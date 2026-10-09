@@ -1,14 +1,29 @@
 import { NextResponse } from 'next/server';
 import { getSupabaseServer } from '@/lib/supabase';
+import { isRateLimited } from '@/lib/rateLimit';
+
+// WHY: il GET è pubblico (usa /clienti) ma NON può esporre email/telefoni/telegram
+// di 211 aziende — altrimenti chiunque scarica l'anagrafica. I contatti li vede solo
+// l'admin (cookie admin_token) o il lead assegnato.
+const PUBLIC_FIELDS = 'id,name,services_offered,coverage_radius_km,is_active,is_verified,credits,rating,rating_count,max_daily_leads,leads_today,availability,logo_url,brand_color,description,photos,created_at';
+
+function isAdmin(req: Request): boolean {
+  const t = process.env.ADMIN_TOKEN || '';
+  if (!t) return true; // dev
+  const r = req as Request & { cookies?: { get: (n: string) => { value?: string } | undefined } };
+  const cookie = r.cookies?.get('admin_token')?.value;
+  return req.headers.get('x-admin-token') === t || cookie === t;
+}
 
 function point(lat: number, lon: number): string {
   return `SRID=4326;POINT(${lon} ${lat})`;
 }
 
-export async function GET() {
+export async function GET(req: Request) {
   try {
     const sb = getSupabaseServer();
-    const { data, error } = await sb.from('partners').select('*').order('created_at', { ascending: false });
+    const fields = isAdmin(req) ? '*' : PUBLIC_FIELDS;
+    const { data, error } = await sb.from('partners').select(fields).order('created_at', { ascending: false });
     if (error) throw new Error(error.message);
     return NextResponse.json({ success: true, partners: data });
   } catch (e) {
@@ -31,6 +46,10 @@ function isValidAvailability(v: unknown): boolean {
 
 export async function POST(req: Request) {
   try {
+    // WHY anti-spam: registrazione partner aperta → max 5 nuovi partner/ora per IP
+    const ip = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown';
+    if (await isRateLimited(`reg:${ip}`, 5, 60 * 60 * 1000))
+      return NextResponse.json({ success: false, error: 'Troppe registrazioni, riprova più tardi' }, { status: 429 });
     const b = await req.json();
     const { name, email, phone, telegram_chat_id, services_offered, lat, lon, coverage_radius_km, max_daily_leads, availability } = b as {
       name?: string;
@@ -82,6 +101,10 @@ export async function POST(req: Request) {
 
 export async function PATCH(req: Request) {
   try {
+    // WHY critico: PATCH può cambiare credits/is_active/is_verified → solo admin.
+    // Prima chiunque con un curl pompareva i crediti di un partner.
+    if (!isAdmin(req))
+      return NextResponse.json({ success: false, error: 'Operazione riservata' }, { status: 403 });
     const b = await req.json();
     const { id, ...fields } = b as { id?: string; [k: string]: unknown };
     if (!id) return NextResponse.json({ success: false, error: 'id richiesto' }, { status: 400 });

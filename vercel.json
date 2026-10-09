@@ -3,6 +3,10 @@
     {
       "path": "/api/cron/check-timeouts",
       "schedule": "0 2 * * *"
+    },
+    {
+      "path": "/api/cron/recap",
+      "schedule": "0 7 * * 1"
     }
   ]
 }
