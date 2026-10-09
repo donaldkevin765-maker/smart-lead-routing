@@ -1,11 +1,11 @@
 import { NextResponse } from 'next/server';
 import { matchPartners } from '@/lib/matching';
-import { isRateLimited } from '@/lib/validation';
+import { isRateLimited } from '@/lib/rateLimit';
 
 export async function POST(req: Request) {
   try {
     const ip = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown';
-    if (isRateLimited(`match:${ip}`, 30, 60 * 60 * 1000))
+    if (await isRateLimited(`match:${ip}`, 30, 60 * 60 * 1000))
       return NextResponse.json({ success: false, error: 'Troppe richieste' }, { status: 429 });
     const body = await req.json();
     const { lat, lon, service, urgency, excluded } = body as {

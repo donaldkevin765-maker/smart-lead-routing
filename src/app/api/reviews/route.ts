@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getSupabaseServer } from '@/lib/supabase';
-import { isRateLimited } from '@/lib/validation';
+import { isRateLimited } from '@/lib/rateLimit';
 
 // GET /api/reviews?partnerId=xx — recensioni (copiate 'google'/'sito' + nostre 'strobe')
 export async function GET(req: Request) {
@@ -24,7 +24,7 @@ export async function POST(req: Request) {
   try {
     // WHY anti-spam: 5 recensioni/ora per IP — mai più, altrimenti gonfia il rating
     const ip = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown';
-    if (isRateLimited(`rev:${ip}`, 5, 60 * 60 * 1000))
+    if (await isRateLimited(`rev:${ip}`, 5, 60 * 60 * 1000))
       return NextResponse.json({ success: false, error: 'Troppe recensioni, riprova più tardi' }, { status: 429 });
     const b = await req.json();
     const { partnerId, authorName, rating, comment } = b as { partnerId?: string; authorName?: string; rating?: number; comment?: string };

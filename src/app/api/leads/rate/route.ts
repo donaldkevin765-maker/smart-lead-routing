@@ -1,11 +1,11 @@
 import { NextResponse } from 'next/server';
 import { getSupabaseServer } from '@/lib/supabase';
-import { isRateLimited } from '@/lib/validation';
+import { isRateLimited } from '@/lib/rateLimit';
 
 export async function POST(req: Request) {
   try {
     const ip = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown';
-    if (isRateLimited(`rate:${ip}`, 10, 60 * 60 * 1000))
+    if (await isRateLimited(`rate:${ip}`, 10, 60 * 60 * 1000))
       return NextResponse.json({ success: false, error: 'Troppe richieste' }, { status: 429 });
     const { leadId, rating } = (await req.json()) as { leadId?: string; rating?: number };
     if (!leadId || typeof rating !== 'number' || rating < 1 || rating > 5)

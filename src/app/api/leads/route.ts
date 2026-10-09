@@ -4,7 +4,8 @@ import { matchPartners, buildTimeoutDate } from '@/lib/matching';
 import { getSupabaseServer } from '@/lib/supabase';
 import { sendLeadNotification, telegramConfigured } from '@/lib/telegram';
 import { sendEmail, resendConfigured, leadConfirmationHtml, partnerNotificationHtml } from '@/lib/resend';
-import { leadSchema, isHoneypot, isRateLimited } from '@/lib/validation';
+import { leadSchema, isHoneypot } from '@/lib/validation';
+import { isRateLimited } from '@/lib/rateLimit';
 
 const SITE = process.env.NEXT_PUBLIC_SITE_URL || '';
 
@@ -12,7 +13,7 @@ export async function POST(req: Request) {
   try {
     // WHY: IP per rate limit — x-forwarded-for è l'unico dato affidabile su Vercel
     const ip = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown';
-    if (isRateLimited(`ip:${ip}`, 10, 60 * 60 * 1000))
+    if (await isRateLimited(`ip:${ip}`, 10, 60 * 60 * 1000))
       return NextResponse.json({ success: false, error: 'Troppe richieste, riprova tra un ora' }, { status: 429 });
 
     const body = await req.json();
@@ -29,7 +30,7 @@ export async function POST(req: Request) {
 
     // Rate limit per telefono — anti dedup/flood mirato
     const phoneKey = phone.replace(/\s/g, '');
-    if (isRateLimited(`phone:${phoneKey}`, 1, 30 * 60 * 1000))
+    if (await isRateLimited(`phone:${phoneKey}`, 1, 30 * 60 * 1000))
       return NextResponse.json({ success: false, error: 'Hai già una richiesta attiva, riprova tra 30 minuti' }, { status: 429 });
 
     const q = await qualifyLead(prompt.trim());
