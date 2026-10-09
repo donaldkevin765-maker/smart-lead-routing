@@ -36,7 +36,7 @@ export default function ReviewBox({ partnerId }: { partnerId: string }) {
     <section style={{ marginTop: 28 }}>
       <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, flexWrap: 'wrap' }}>
         <h2 style={{ margin: 0, fontSize: 20 }}>Recensioni</h2>
-        {count > 0 && <span style={{ fontWeight: 700, color: '#eab308'}>★ {avg.toFixed(1)}</span>}
+        {count > 0 && <span style={{ fontWeight: 700, color: '#eab308' }}>★ {avg.toFixed(1)}</span>}
         <span className="muted" style={{ fontSize: 13 }}>{count} recensioni</span>
       </div>
 
