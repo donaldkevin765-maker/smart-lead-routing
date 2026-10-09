@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <!-- STROBE mark: punto = richiesta, archi = smistamento luminoso -->
+  <circle cx="34" cy="50" r="9" fill="#0071e3"/>
+  <path d="M53 33 a23 23 0 0 1 0 34" stroke="#0071e3" stroke-width="8" fill="none" stroke-linecap="round"/>
+  <path d="M68 22 a36 36 0 0 1 0 56" stroke="#0071e3" stroke-width="8" fill="none" stroke-linecap="round" opacity="0.5"/>
+</svg>

@@ -15,7 +15,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <nav className="nav">
           <div className="nav-inner">
             <a className="brand" href="/">
-              <span className="brand-dot" />
+              <img src="/strobe-mark.svg" alt="" width={22} height={22} style={{ display: 'block' }} />
               STROBE
             </a>
             <div className="nav-links">
@@ -33,7 +33,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <div className="footer-grid" style={{ maxWidth: 980, margin: '0 auto', padding: '40px 22px 20px', display: 'grid', gridTemplateColumns: '1.2fr 1fr 1fr 1.4fr', gap: 32 }}>
             <div>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
-                <span className="brand-dot" />
+                <img src="/strobe-mark.svg" alt="" width={20} height={20} />
                 <strong style={{ fontSize: 15, letterSpacing: '-0.01em' }}>STROBE</strong>
               </div>
               <p style={{ fontSize: 13, color: 'var(--muted)', lineHeight: 1.5, margin: 0 }}>

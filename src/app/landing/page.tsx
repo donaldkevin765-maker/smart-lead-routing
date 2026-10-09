@@ -51,7 +51,10 @@ export default async function LandingPage() {
       {/* 1 — HERO: una sola frase enorme */}
       <section style={{ padding: '56px 0 40px', maxWidth: 900 }}>
         <Reveal as="p" delay={0}>
-          <span style={{ fontSize: 12, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'var(--accent)', fontWeight: 650 }}>Chi siamo</span>
+          <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
+            <img src="/strobe-mark.svg" alt="" width={18} height={18} />
+            <span style={{ fontSize: 12, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'var(--accent)', fontWeight: 650 }}>Chi siamo</span>
+          </span>
         </Reveal>
         <Reveal as="h1" delay={60}><span style={s}>Il problema giusto,<br />alla persona giusta.</span></Reveal>
         <Reveal as="p" delay={160}>
