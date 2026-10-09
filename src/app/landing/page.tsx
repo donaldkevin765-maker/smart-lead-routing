@@ -1,17 +1,18 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { getSupabaseServer } from '@/lib/supabase';
+import { Reveal, Counter, RouteDemo } from '@/components/LandingBits';
 
 export const metadata: Metadata = {
-  title: 'STROBE — Chi siamo | Trova chi ti risolve il problema, a Monza Brianza',
-  description: 'STROBE collega chi ha un problema a chi sa risolverlo, nella zona giusta e al momento giusto. Nessuna ricerca, nessuna telefonata a caso.',
+  title: 'STROBE — Chi siamo | Il problema giusto, alla persona giusta',
+  description: 'Scrivi cosa ti serve. STROBE trova il professionista verificato più vicino e te lo manda. Monza Brianza.',
   alternates: { canonical: 'https://smart-lead-routing.vercel.app/landing' },
 };
 
-/** Landing: chi siamo + perché fidarsi, in modo implicito (nessuna pressione di vendita) */
+/** Landing minimal Apple-style: whitespace, tipografia grande, una cosa per sezione, demo live */
 export default async function LandingPage() {
   const sb = getSupabaseServer();
-  let partnerN = 0, reviewN = 0, avg = 0, comuniN = 0;
+  let partnerN = 0, reviewN = 0, avg = 0;
   try {
     const [{ count: pn }, rev] = await Promise.all([
       sb.from('partners').select('id', { count: 'exact', head: true }).eq('is_active', true),
@@ -21,20 +22,22 @@ export default async function LandingPage() {
     const rows = (rev.data || []) as { rating: number }[];
     reviewN = rows.length;
     avg = rows.length ? Math.round((rows.reduce((s, r) => s + r.rating, 0) / rows.length) * 10) / 10 : 0;
-    comuniN = 16;
   } catch {}
 
+  const s = { fontSize: 'clamp(38px,8vw,88px)', fontWeight: 700, letterSpacing: '-0.035em', lineHeight: 1.02, margin: 0 } as const;
+  const h2 = { fontSize: 'clamp(26px,4vw,44px)', fontWeight: 700, letterSpacing: '-0.025em', lineHeight: 1.1, margin: 0 } as const;
+  const lead = { fontSize: 'clamp(16px,2vw,21px)', color: 'var(--muted)', lineHeight: 1.5, fontWeight: 400 } as const;
+
   const steps = [
-    { n: '01', t: 'Racconti il problema', d: 'Una frase basta. "Perde acqua il lavandino", "cerco palestra con sauna". Niente moduli lunghi, niente registrazione.' },
-    { n: '02', t: 'Noi capiamo e smistiamo', d: 'Il sistema capisce cosa ti serve, quanto è urgente e manda la richiesta al professionista giusto della tua zona.' },
-    { n: '03', t: 'Ti arriva la risposta', d: 'Chi è adatto risponde. Se il primo non c’è, in 15 minuti ci prova un altro. Tu non chiami nessuno.' },
+    { n: '01', t: 'Scrivi', d: 'Una frase. Come un messaggio a un amico.' },
+    { n: '02', t: 'Smistiamo', d: 'Capito il problema, troviamo chi è adatto — vicino, verificato, libero.' },
+    { n: '03', t: 'Risponde', d: 'Arriva da te. Se il primo non c’è, ci prova un altro in 15 minuti.' },
   ];
 
-  const triggers = [
-    { t: 'Zero ricerca', d: 'Non apri 10 tab, non leggi 40 recensioni contrastanti. Scrivi una volta, ricevi chi fa per te.' },
-    { t: 'Solo verificati', d: 'Ogni professionista ha dati ufficiali: orari, telefono, zona coperta. Nessun numero inventato.' },
-    { t: 'Nessun impegno', d: 'Vuoi solo guardare? Guardi. Vuoi contattare? Contatti. Nessuno ti chiama se non lo chiedi.' },
-    { t: 'Una richiesta, uno', d: 'Non finisci in una lista ricchiamata da 6 aziende. Vaia a chi è davvero adatto, prima lui.' },
+  const pillars = [
+    { t: 'Solo chi esiste', d: 'Ogni scheda ha orari e telefono presi dal canale ufficiale. Niente fantasia.' },
+    { t: 'Una richiesta, una persona', d: 'Non finisci in cinque liste. Vai a chi fa per te, e basta.' },
+    { t: 'Tu decidi i contatti', d: 'Guardare è libero. I tuoi dati li dai solo quando vuoi essere richiamato.' },
   ];
 
   return (
@@ -45,100 +48,130 @@ export default async function LandingPage() {
         mainEntity: { '@type': 'Organization', name: 'STROBE', email: 'infostrobe5@gmail.com', areaServed: 'Monza e Brianza, Italia' },
       }) }} />
 
-      {/* HERO — domanda che risuona, nessuna vendita */}
-      <section className="hero" style={{ textAlign: 'left', padding: '28px 0 8px' }}>
-        <p style={{ fontSize: 13, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--accent)', fontWeight: 650, margin: 0 }}>Chi siamo</p>
-        <h1 style={{ fontSize: 'clamp(30px,5.5vw,54px)', lineHeight: 1.08, margin: '10px 0 0', letterSpacing: '-0.02em', fontWeight: 700 }}>
-          Quante ore hai perso<br />a cercare qualcuno<br />che ti risolvesse un problema?
-        </h1>
-        <p style={{ fontSize: 'clamp(16px,2vw,19px)', lineHeight: 1.55, color: 'var(--muted)', maxWidth: 640, margin: '16px 0 0' }}>
-          Noi facciamo l&rsquo;opposto: tu scrivi cosa ti serve, e il professionista giusto arriva da te.
-          Zona giusta, momento giusto, dati verificati.
-        </p>
-        <div style={{ display: 'flex', gap: 10, marginTop: 22, flexWrap: 'wrap' }}>
-          <Link href="/" className="btn" style={{ borderRadius: 999 }}>Prova ora — è gratis</Link>
-          <Link href="/partner" className="btn btn-secondary" style={{ borderRadius: 999 }}>Lavoro con STROBE</Link>
-        </div>
-        {/* Prova sociale silenziosa, non invasiva */}
-        <p className="muted" style={{ fontSize: 13, marginTop: 14 }}>
-          {partnerN > 0 ? `${partnerN} professionisti attivi` : 'Professionisti in attivazione'} · {comuniN} comuni della Brianza
-          {reviewN > 0 && avg > 0 ? ` · ★ ${avg} su ${reviewN} recensioni` : ''} · Nessun costo per chi cerca
-        </p>
+      {/* 1 — HERO: una sola frase enorme */}
+      <section style={{ padding: '56px 0 40px', maxWidth: 900 }}>
+        <Reveal as="p" delay={0}>
+          <span style={{ fontSize: 12, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'var(--accent)', fontWeight: 650 }}>Chi siamo</span>
+        </Reveal>
+        <Reveal as="h1" delay={60}><span style={s}>Il problema giusto,<br />alla persona giusta.</span></Reveal>
+        <Reveal as="p" delay={160}>
+          <span style={{ ...lead, display: 'block', maxWidth: 560, marginTop: 20 }}>
+            Tu scrivi cosa ti serve. Noi troviamo chi sa farlo, vicino a te, e glielo mandiamo.
+            Tu non chiami nessuno.
+          </span>
+        </Reveal>
+        <Reveal delay={260}>
+          <div style={{ display: 'flex', gap: 10, marginTop: 30, flexWrap: 'wrap' }}>
+            <Link href="/" className="btn" style={{ borderRadius: 999, padding: '13px 30px', fontSize: 15 }}>Prova — gratis</Link>
+            <Link href="/partner" className="btn btn-secondary" style={{ borderRadius: 999, padding: '13px 30px', fontSize: 15 }}>Lavoro con STROBE</Link>
+          </div>
+        </Reveal>
       </section>
 
-      {/* MECCANISMO — 3 passi, il cervello capisce subito */}
-      <section style={{ margin: '36px 0' }}>
-        <h2 style={{ fontSize: 'clamp(22px,3vw,30px)', margin: '0 0 18px', letterSpacing: '-0.01em' }}>Come funziona — 3 passi</h2>
-        <div style={{ display: 'grid', gap: 12, gridTemplateColumns: 'repeat(auto-fit,minmax(230px,1fr))' }}>
-          {steps.map((s) => (
-            <div key={s.n} className="card" style={{ padding: 20 }}>
-              <span style={{ fontSize: 13, fontWeight: 700, color: 'var(--accent)' }}>{s.n}</span>
-              <h3 style={{ fontSize: 17, margin: '8px 0 6px' }}>{s.t}</h3>
-              <p className="muted" style={{ fontSize: 14, lineHeight: 1.55, margin: 0 }}>{s.d}</p>
+      {/* 2 — DEMO LIVE: l'unico "feature" che serve */}
+      <section style={{ padding: '20px 0 56px', maxWidth: 640 }}>
+        <Reveal delay={0}><RouteDemo /></Reveal>
+        <Reveal delay={120}>
+          <p style={{ ...lead, fontSize: 14, marginTop: 14 }}>Demo reale del flusso. Nessun campo, nessuna registrazione.</p>
+        </Reveal>
+      </section>
+
+      {/* 3 — NUMERI: prova, non promessa */}
+      <section style={{ borderTop: '1px solid var(--card-border)', borderBottom: '1px solid var(--card-border)', padding: '44px 0', display: 'grid', gap: 24, gridTemplateColumns: 'repeat(auto-fit,minmax(150px,1fr))' }}>
+        {[
+          { n: <Counter to={partnerN} />, l: 'professionisti verificati' },
+          { n: <Counter to={16} />, l: 'comuni della Brianza' },
+          { n: reviewN > 0 ? <><Counter to={reviewN} /></> : '—', l: reviewN > 0 ? `recensioni · ★ ${avg}` : 'recensioni in arrivo' },
+        ].map((x, i) => (
+          <Reveal key={i} delay={i * 90}>
+            <div>
+              <div style={{ fontSize: 'clamp(34px,5vw,56px)', fontWeight: 700, letterSpacing: '-0.03em', lineHeight: 1 }}>{x.n}</div>
+              <div style={{ fontSize: 13, color: 'var(--muted)', marginTop: 8 }}>{x.l}</div>
             </div>
+          </Reveal>
+        ))}
+      </section>
+
+      {/* 4 — TRE PASSI: una parola per titolo */}
+      <section style={{ padding: '64px 0' }}>
+        <Reveal as="h2" delay={0}><span style={h2}>Tre passi. Tutto qui.</span></Reveal>
+        <div style={{ display: 'grid', gap: 40, marginTop: 36, gridTemplateColumns: 'repeat(auto-fit,minmax(220px,1fr))' }}>
+          {steps.map((x, i) => (
+            <Reveal key={x.n} delay={i * 110}>
+              <div>
+                <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--accent)' }}>{x.n}</div>
+                <h3 style={{ fontSize: 24, fontWeight: 650, letterSpacing: '-0.02em', margin: '10px 0 8px' }}>{x.t}</h3>
+                <p style={{ ...lead, fontSize: 15 }}>{x.d}</p>
+              </div>
+            </Reveal>
           ))}
         </div>
       </section>
 
-      {/* IDENTITÀ — chi siamo in 3 righe vere */}
-      <section className="card" style={{ padding: 24, margin: '10px 0 24px' }}>
-        <h2 style={{ fontSize: 22, margin: '0 0 10px' }}>STROBE in 3 righe</h2>
-        <p style={{ fontSize: 15, lineHeight: 1.6, margin: '0 0 10px' }}>
-          Siamo nati a <strong>Monza</strong>, da un problema stupidissimo: cercare un professionista affidabile
-          in Brianza significa telefonare a caso, aspettare, e sperare. Abbiamo costruito il sistema che avremmo
-          voluto avere noi — <strong>uno solo, diretto, che risponde</strong>.
-        </p>
-        <p className="muted" style={{ fontSize: 14, lineHeight: 1.6, margin: 0 }}>
-          Non siamo un&rsquo;agenzia e non vendiamo niente a te: lavoriamo con i professionisti verificati della zona,
-          che pagano solo quando portano valore. Il tuo contatto resta tuo — lo dai solo se vuoi.
-        </p>
+      {/* 5 — IDENTITÀ: poche parole, grandi */}
+      <section style={{ background: '#fbfbfd', borderTop: '1px solid var(--card-border)', borderBottom: '1px solid var(--card-border)', padding: '72px 0' }}>
+        <div style={{ maxWidth: 780 }}>
+          <Reveal as="h2" delay={0}>
+            <span style={{ ...h2, display: 'block' }}>Nati a Monza,<br />da un problema stupido.</span>
+          </Reveal>
+          <Reveal delay={100}>
+            <p style={{ ...lead, marginTop: 24 }}>
+              Cercare un professionista in Brianza significava telefonare a caso, aspettare, sperare.
+              Abbiamo costruito il sistema che avremmo voluto avere noi: <strong style={{ color: 'var(--text)', fontWeight: 600 }}>uno, diretto, che risponde</strong>.
+            </p>
+          </Reveal>
+          <Reveal delay={180}>
+            <p style={{ ...lead, marginTop: 14 }}>
+              Non vendiamo niente a chi cerca. Lavoriamo con i professionisti della zona,
+              che pagano solo quando portano valore.
+            </p>
+          </Reveal>
+        </div>
       </section>
 
-      {/* PERCHÉ FUNZIONA — benefizi senza pressione */}
-      <section style={{ margin: '10px 0 30px' }}>
-        <h2 style={{ fontSize: 'clamp(22px,3vw,30px)', margin: '0 0 16px' }}>Perché chi lo prova torna</h2>
-        <div style={{ display: 'grid', gap: 12, gridTemplateColumns: 'repeat(auto-fit,minmax(240px,1fr))' }}>
-          {triggers.map((x) => (
-            <div key={x.t} style={{ borderTop: '2px solid var(--accent)', paddingTop: 12 }}>
-              <h3 style={{ fontSize: 16, margin: '0 0 6px' }}>{x.t}</h3>
-              <p className="muted" style={{ fontSize: 14, lineHeight: 1.55, margin: 0 }}>{x.d}</p>
-            </div>
+      {/* 6 — TRE PILASTRI: niente card, solo linee */}
+      <section style={{ padding: '64px 0' }}>
+        <div style={{ display: 'grid', gap: 34, gridTemplateColumns: 'repeat(auto-fit,minmax(240px,1fr))' }}>
+          {pillars.map((x, i) => (
+            <Reveal key={x.t} delay={i * 100}>
+              <div style={{ borderTop: '1px solid var(--text)', paddingTop: 16 }}>
+                <h3 style={{ fontSize: 17, fontWeight: 650, margin: '0 0 8px', letterSpacing: '-0.01em' }}>{x.t}</h3>
+                <p style={{ ...lead, fontSize: 14 }}>{x.d}</p>
+              </div>
+            </Reveal>
           ))}
         </div>
       </section>
 
-      {/* CHI USA STROBE — due porte, nessuna pressione */}
-      <section style={{ display: 'grid', gap: 12, gridTemplateColumns: 'repeat(auto-fit,minmax(260px,1fr))', marginBottom: 34 }}>
-        <div className="card" style={{ padding: 24 }}>
-          <h3 style={{ margin: '0 0 8px', fontSize: 18 }}>Hai un problema da risolvere</h3>
-          <p className="muted" style={{ fontSize: 14, lineHeight: 1.6, margin: '0 0 14px' }}>
-            Scrivi una frase. Sei tu che decidi se lasciare i tuoi contatti. Nessun costo, nessun impegno,
-            nessuna lista aziende che ti scrivono.
-          </p>
-          <Link href="/" className="btn" style={{ borderRadius: 999 }}>Racconta cosa ti serve</Link>
-        </div>
-        <div className="card" style={{ padding: 24 }}>
-          <h3 style={{ margin: '0 0 8px', fontSize: 18 }}>Sei un professionista</h3>
-          <p className="muted" style={{ fontSize: 14, lineHeight: 1.6, margin: '0 0 14px' }}>
-            Ti arrivano richieste già capite e filtrate dalla tua zona. Le accetti, le rifiuti, le ignori.
-            Si paga solo quando una ti porta un cliente.
-          </p>
-          <Link href="/partner" className="btn btn-secondary" style={{ borderRadius: 999 }}>Entra nella rete</Link>
-        </div>
+      {/* 7 — DUE PORTE */}
+      <section style={{ display: 'grid', gap: 16, gridTemplateColumns: 'repeat(auto-fit,minmax(280px,1fr))', paddingBottom: 64 }}>
+        {[
+          { t: 'Hai un problema', d: 'Una frase, 30 secondi. Guardare è libero, contattare è tua scelta.', cta: 'Racconta cosa ti serve', href: '/', primary: true },
+          { t: 'Sei un professionista', d: 'Richieste già capite, dalla tua zona. Si paga solo quando porta un cliente.', cta: 'Entra nella rete', href: '/partner', primary: false },
+        ].map((x, i) => (
+          <Reveal key={x.t} delay={i * 120}>
+            <div className="card" style={{ padding: 28, height: '100%', display: 'flex', flexDirection: 'column', gap: 10 }}>
+              <h3 style={{ fontSize: 21, fontWeight: 650, letterSpacing: '-0.02em', margin: 0 }}>{x.t}</h3>
+              <p style={{ ...lead, fontSize: 14, flex: 1 }}>{x.d}</p>
+              <div>
+                <Link href={x.href} className={x.primary ? 'btn' : 'btn btn-secondary'} style={{ borderRadius: 999, padding: '11px 24px', fontSize: 14 }}>{x.cta}</Link>
+              </div>
+            </div>
+          </Reveal>
+        ))}
       </section>
 
-      {/* CHIUSA — invito morbido, zero urgenza finti */}
-      <section style={{ textAlign: 'center', padding: '26px 0 40px', borderTop: '1px solid var(--card-border)' }}>
-        <p style={{ fontSize: 'clamp(18px,2.6vw,24px)', fontWeight: 650, margin: '0 0 6px', letterSpacing: '-0.01em' }}>
-          Il prossimo problema lo risolvi in una frase.
-        </p>
-        <p className="muted" style={{ fontSize: 14, margin: '0 0 18px' }}>
-          Ci vuole 30 secondi. Se non fa per te, hai solo scritto una frase.
-        </p>
-        <Link href="/" className="btn" style={{ borderRadius: 999, padding: '13px 30px', fontSize: 15 }}>Inizia</Link>
-        <p className="muted" style={{ fontSize: 12, marginTop: 16 }}>
-          Domande: <a href="mailto:infostrobe5@gmail.com" style={{ color: 'var(--text)' }}>infostrobe5@gmail.com</a>
-        </p>
+      {/* 8 — CHIUSA */}
+      <section style={{ textAlign: 'center', padding: '56px 0 72px', borderTop: '1px solid var(--card-border)' }}>
+        <Reveal as="h2" delay={0}><span style={{ ...h2, display: 'block' }}>Il prossimo problema<br />lo risolvi in una frase.</span></Reveal>
+        <Reveal delay={120}>
+          <div style={{ marginTop: 28 }}>
+            <Link href="/" className="btn" style={{ borderRadius: 999, padding: '15px 42px', fontSize: 16 }}>Inizia</Link>
+          </div>
+          <p style={{ fontSize: 13, color: 'var(--muted)', marginTop: 18 }}>
+            Domande? <a href="mailto:infostrobe5@gmail.com" style={{ color: 'var(--text)' }}>infostrobe5@gmail.com</a>
+          </p>
+        </Reveal>
       </section>
     </div>
   );
