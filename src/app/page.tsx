@@ -83,7 +83,7 @@ export default function HomePage() {
       // Sprint 2: 1 chiarimento se generico — non spreca lead a caso
       const q = await qualifyFirst();
       if (q && q.service === 'generico' && !clarify) {
-        setClarify({ need: true, question: 'Non ho capito bene il servizio — è per casa, palestra o benessere?', suggestion: 'Es. "cerco palestra con sauna" o "perdita acqua cucina"' });
+        setClarify({ need: true, question: 'Non ho capito bene il servizio — è per casa, animali, auto, informatica o bambini?', suggestion: 'Es. "tolettatura cane a Monza" o "perdita acqua cucina"' });
         setLoading(false);
         return;
       }
@@ -138,7 +138,7 @@ export default function HomePage() {
               <p style={{ margin: 0, fontWeight: 600, fontSize: 14 }}>{clarify.question}</p>
               <p className="muted" style={{ fontSize: 13, margin: '4px 0 0' }}>{clarify.suggestion}</p>
               <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginTop: 8 }}>
-                {['idraulica', 'palestra', 'parrucchiere', 'pulizie'].map((s) => (
+                {['idraulica', 'toelettatura', 'meccanica-auto', 'babysitter', 'assistenza-pc', 'pulizie'].map((s) => (
                   <button key={s} type="button" className="chip" onClick={() => setPrompt((p) => `${p} ${s}`.trim())}>{s}</button>
                 ))}
               </div>

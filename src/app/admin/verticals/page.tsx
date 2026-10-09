@@ -50,12 +50,10 @@ export default function AdminVerticals() {
           <div className="row">
             <div>
               <label className="label">Vertical</label>
-              <select className="select" value={form.vertical} onChange={(e) => setForm({ ...form, vertical: e.target.value })}>
-                <option value="casa">casa</option>
-                <option value="fitness">fitness</option>
-                <option value="benessere">benessere</option>
-                <option value="servizi">servizi</option>
-                <option value="altro">altro (scrivi sotto)</option>
+              {/* DB-driven: i verticali arrivano dal catalogo, zero elenchi hardcoded */}
+              <select className="select" value={form.vertical} onChange={(e) => setForm({ ...form, vertical: e.target.value === '__nuovo__' ? '' : e.target.value })}>
+                {Array.from(new Set(services.map((s) => s.vertical))).sort().map((v) => <option key={v} value={v}>{v}</option>)}
+                <option value="__nuovo__">+ nuovo vertical (scrivi sotto)</option>
               </select>
               <input className="input" style={{ marginTop: 8 }} placeholder="o nuovo vertical" value={form.vertical} onChange={(e) => setForm({ ...form, vertical: e.target.value.toLowerCase() })} />
             </div>

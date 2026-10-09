@@ -46,6 +46,31 @@ function fallbackQualify(prompt: string): Qualification {
     if (service === 'generico' && /corrente|presa|interruttore|luce/.test(lower)) service = 'elettricista';
     if (service === 'generico' && /clima|condizionatore|aria/.test(lower)) service = 'climatizzazione';
   }
+  // NUOVI VERTICALI — keyword deterministiche (stessa logica: mai bloccare la raccolta lead)
+  if (service === 'generico') {
+    if (/cane|cagnolone|tolettatura|pet |veterinario|dog|gatto/.test(lower)) {
+      if (/tolettatura|taglio pelo|pulizia cane/.test(lower)) service = 'toelettatura';
+      else if (/veterinario|vaccino|gatto malato/.test(lower)) service = 'veterinario';
+      else if (/addestra|educazione cane/.test(lower)) service = 'addestratore-cani';
+      else if (/passeggiat|dog walker/.test(lower)) service = 'passeggiate-cani';
+      else service = 'pet-sitting';
+    }
+    if (service === 'generico' && /pc|computer|portatile|windows|mac lento|formatta/.test(lower)) service = 'assistenza-pc';
+    if (service === 'generico' && /telefono|smartphone|schermo rotto|batteria spenta/.test(lower)) service = 'riparazione-smartphone';
+    if (service === 'generico' && /wifi|modem|router|rete|internet lento/.test(lower)) service = 'installazione-reti';
+    if (service === 'generico' && /recupero dati|hard disk|disco rigido/.test(lower)) service = 'recupero-dati';
+    if (service === 'generico' && /babysitter|baby sitter|tata|bambino piccolo/.test(lower)) service = 'babysitter';
+    if (service === 'generico' && /ripetizioni|scuola|compiti|medie|elementari/.test(lower)) service = 'ripetizioni';
+    if (service === 'generico' && /festa compleanno|animazione|baby dance/.test(lower)) service = 'animazione-feste';
+    if (service === 'generico' && /personal shop|stile|abbigliamento consiglio/.test(lower)) service = 'personal-shopper';
+    if (service === 'generico' && /consegna spesa|spesa a domicilio|supermercato/.test(lower)) service = 'consegna-spesa';
+    if (service === 'generico' && /acquisto online|amazon|ordine online/.test(lower)) service = 'acquisti-online';
+    if (service === 'generico' && /meccanic|auto in officina|freni|frizione|revisione/.test(lower)) service = 'meccanica-auto';
+    if (service === 'generico' && /gommista|gomme|pneumatici/.test(lower)) service = 'gommista';
+    if (service === 'generico' && /lavaggio auto|lustrare auto/.test(lower)) service = 'lavaggio-auto';
+    if (service === 'generico' && /anziano|nonno|nonna|badante/.test(lower)) service = 'assistenza-anziani';
+    if (service === 'generico' && /accompagnamento|visite mediche anziano/.test(lower)) service = 'accompagnamento-anziani';
+  }
   const urgency: Qualification['urgency'] = /urgen|subito|perdita|allag|gas|scossa|bloccato|rottura/.test(lower)
     ? 'high'
     : /domani|settimana|preventivo|installazione|manutenzione/.test(lower)
