@@ -2,7 +2,7 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 
 /** Reveal allo scroll — supporta prefers-reduced-motion */
-export function Reveal({ children, delay = 0, as: Tag = 'div' }: { children: ReactNode; delay?: number; as?: 'div' | 'section' | 'h1' | 'p' }) {
+export function Reveal({ children, delay = 0, as: Tag = 'div' }: { children: ReactNode; delay?: number; as?: 'div' | 'section' | 'h1' | 'h2' | 'p' }) {
   const ref = useRef<HTMLElement>(null);
   const [on, setOn] = useState(false);
   useEffect(() => {
