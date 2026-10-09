@@ -2,14 +2,20 @@ import { NextResponse } from 'next/server';
 import { qualifyLead } from '@/lib/gemini';
 import { getSupabaseServer } from '@/lib/supabase';
 import { buildBotPrompt } from '@/lib/botRules';
+import { isRateLimited } from '@/lib/validation';
 
 // Chat BOT: capisce cosa vuole l'utente, riassume in breve e risponde SOLO con dati ufficiali.
 // WHY fiducia: mai inventare orari/servizi — solo DB verificato + siti ufficiali. Se manca il dato, lo dice.
 export async function POST(req: Request) {
   try {
+    // WHY anti-brucia-Gemini: chiunque può scrivere -> limita per IP
+    const ip = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown';
+    if (isRateLimited(`chat:${ip}`, 12, 60 * 60 * 1000))
+      return NextResponse.json({ success: false, error: 'Troppe richieste, riprova più tardi' }, { status: 429 });
+
     const { message, partnerId } = (await req.json()) as { message?: string; partnerId?: string };
-    if (!message || message.trim().length < 3)
-      return NextResponse.json({ success: false, error: 'Scrivi almeno 3 caratteri' }, { status: 400 });
+    if (!message || message.trim().length < 3 || message.length > 600)
+      return NextResponse.json({ success: false, error: 'Messaggio non valido (3-600 caratteri)' }, { status: 400 });
 
     const sb = getSupabaseServer();
     let official = '';

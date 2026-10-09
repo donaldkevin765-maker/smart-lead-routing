@@ -2,8 +2,19 @@ import type { Metadata } from 'next';
 import './globals.css';
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://smart-lead-routing.vercel.app'),
   title: 'STROBE — Il professionista giusto, vicino a te',
-  description: 'Descrivi il problema, troviamo il professionista più vicino. Routing geolocalizzato.',
+  description: 'Descrivi il problema, troviamo il professionista verificato più vicino a te. Monza Brianza. Gratis, senza registrazione.',
+  openGraph: {
+    title: 'STROBE — Il professionista giusto, vicino a te',
+    description: 'Una frase basta. A trovarlo chi sa farlo, pensiamo noi. Monza Brianza.',
+    url: 'https://smart-lead-routing.vercel.app',
+    siteName: 'STROBE',
+    locale: 'it_IT',
+    type: 'website',
+  },
+  twitter: { card: 'summary', title: 'STROBE', description: 'Il professionista giusto, vicino a te. Monza Brianza.' },
+  robots: { index: true, follow: true },
 };
 
 const linkStyle = { color: '#86868b', textDecoration: 'none', transition: 'color 0.2s' } as const;

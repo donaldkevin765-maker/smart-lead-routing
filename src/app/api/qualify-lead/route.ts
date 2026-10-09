@@ -1,8 +1,13 @@
 import { NextResponse } from 'next/server';
 import { qualifyLead } from '@/lib/gemini';
+import { isRateLimited } from '@/lib/validation';
 
 export async function POST(req: Request) {
   try {
+    const ip = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown';
+    if (isRateLimited(`qual:${ip}`, 20, 60 * 60 * 1000))
+      return NextResponse.json({ success: false, error: 'Troppe richieste, riprova più tardi' }, { status: 429 });
+
     const body = await req.json();
     const { prompt } = body as { prompt?: string };
     if (!prompt || typeof prompt !== 'string' || prompt.trim().length < 3) {
