@@ -93,6 +93,22 @@ body {
 }
 .nav-links a:hover { color: var(--accent); }
 
+/* — Seleziona & focus (polish) — */
+::selection { background: rgba(0, 113, 227, 0.18); }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 6px; }
+a { -webkit-tap-highlight-color: transparent; }
+img { border-radius: var(--radius-sm); }
+
+/* — Eyebrow — */
+.eyebrow {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 650;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
 /* — Hero — */
 .hero { text-align: center; padding: 56px 0 8px; }
 .hero-eyebrow {
@@ -111,6 +127,8 @@ body {
   letter-spacing: -0.03em;
   line-height: 1.08;
   margin: 0 0 12px;
+  /* glow blu sottile dietro il titolo — identità STROBE */
+  background: radial-gradient(600px 200px at 50% 120%, rgba(0, 113, 227, 0.1), transparent 70%);
 }
 .hero p {
   color: var(--text-2);
@@ -136,6 +154,8 @@ body {
   to { opacity: 1; transform: none; }
 }
 .card h2, .card h3 { letter-spacing: -0.02em; margin-top: 0; }
+.card { transition: transform 0.25s var(--spring), box-shadow 0.25s var(--spring); }
+.card:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); }
 
 /* — Form — */
 .label {
@@ -178,7 +198,7 @@ body {
   transition: transform 0.15s var(--spring), background 0.2s, box-shadow 0.2s;
   box-shadow: 0 4px 14px rgba(0, 113, 227, 0.3);
 }
-.btn:hover { background: var(--accent-hover); transform: scale(1.02); }
+.btn:hover { background: var(--accent-hover); transform: scale(1.02); box-shadow: 0 6px 20px rgba(0, 113, 227, 0.4); }
 .btn:active { transform: scale(0.98); }
 .btn:disabled { opacity: 0.55; cursor: wait; transform: none; }
 .btn-secondary {

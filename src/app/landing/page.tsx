@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { getSupabaseServer } from '@/lib/supabase';
 import { Reveal, Counter, RouteDemo } from '@/components/LandingBits';
+import { COPY } from '@/lib/copy';
 
 export const metadata: Metadata = {
   title: 'STROBE — Chi siamo | Il problema giusto, alla persona giusta',
@@ -24,8 +25,8 @@ export default async function LandingPage() {
     avg = rows.length ? Math.round((rows.reduce((s, r) => s + r.rating, 0) / rows.length) * 10) / 10 : 0;
   } catch {}
 
-  const s = { fontSize: 'clamp(38px,8vw,88px)', fontWeight: 700, letterSpacing: '-0.035em', lineHeight: 1.02, margin: 0 } as const;
-  const h2 = { fontSize: 'clamp(26px,4vw,44px)', fontWeight: 700, letterSpacing: '-0.025em', lineHeight: 1.1, margin: 0 } as const;
+  const s = { fontSize: 'clamp(38px,8vw,88px)', fontWeight: 700, letterSpacing: '-0.035em', lineHeight: 1.02, margin: 0, whiteSpace: 'pre-line' } as const;
+  const h2 = { fontSize: 'clamp(26px,4vw,44px)', fontWeight: 700, letterSpacing: '-0.025em', lineHeight: 1.1, margin: 0, whiteSpace: 'pre-line' } as const;
   const lead = { fontSize: 'clamp(16px,2vw,21px)', color: 'var(--muted)', lineHeight: 1.5, fontWeight: 400 } as const;
 
   const steps = [
@@ -53,20 +54,19 @@ export default async function LandingPage() {
         <Reveal as="p" delay={0}>
           <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
             <img src="/strobe-mark.svg" alt="" width={18} height={18} />
-            <span style={{ fontSize: 12, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'var(--accent)', fontWeight: 650 }}>Chi siamo</span>
+            <span style={{ fontSize: 12, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'var(--accent)', fontWeight: 650 }}>{COPY.landingEyebrow}</span>
           </span>
         </Reveal>
-        <Reveal as="h1" delay={60}><span style={s}>Il problema giusto,<br />alla persona giusta.</span></Reveal>
+        <Reveal as="h1" delay={60}><span style={s}>{COPY.landingH1}</span></Reveal>
         <Reveal as="p" delay={160}>
           <span style={{ ...lead, display: 'block', maxWidth: 560, marginTop: 20 }}>
-            Tu scrivi cosa ti serve. Noi troviamo chi sa farlo, vicino a te, e glielo mandiamo.
-            Tu non chiami nessuno.
+            {COPY.landingLead}
           </span>
         </Reveal>
         <Reveal delay={260}>
           <div style={{ display: 'flex', gap: 10, marginTop: 30, flexWrap: 'wrap' }}>
-            <Link href="/" className="btn" style={{ borderRadius: 999, padding: '13px 30px', fontSize: 15 }}>Prova — gratis</Link>
-            <Link href="/partner" className="btn btn-secondary" style={{ borderRadius: 999, padding: '13px 30px', fontSize: 15 }}>Lavoro con STROBE</Link>
+            <Link href="/" className="btn" style={{ borderRadius: 999, padding: '13px 30px', fontSize: 15 }}>{COPY.ctaTry}</Link>
+            <Link href="/partner" className="btn btn-secondary" style={{ borderRadius: 999, padding: '13px 30px', fontSize: 15 }}>{COPY.ctaPartner}</Link>
           </div>
         </Reveal>
       </section>
@@ -75,7 +75,7 @@ export default async function LandingPage() {
       <section style={{ padding: '20px 0 56px', maxWidth: 640 }}>
         <Reveal delay={0}><RouteDemo /></Reveal>
         <Reveal delay={120}>
-          <p style={{ ...lead, fontSize: 14, marginTop: 14 }}>Demo reale del flusso. Nessun campo, nessuna registrazione.</p>
+          <p style={{ ...lead, fontSize: 14, marginTop: 14 }}>{COPY.landingDemoNote}</p>
         </Reveal>
       </section>
 
@@ -97,7 +97,7 @@ export default async function LandingPage() {
 
       {/* 4 — TRE PASSI: una parola per titolo */}
       <section style={{ padding: '64px 0' }}>
-        <Reveal as="h2" delay={0}><span style={h2}>Tre passi. Tutto qui.</span></Reveal>
+        <Reveal as="h2" delay={0}><span style={h2}>{COPY.landingSteps}</span></Reveal>
         <div style={{ display: 'grid', gap: 40, marginTop: 36, gridTemplateColumns: 'repeat(auto-fit,minmax(220px,1fr))' }}>
           {steps.map((x, i) => (
             <Reveal key={x.n} delay={i * 110}>
@@ -115,18 +115,16 @@ export default async function LandingPage() {
       <section style={{ background: '#fbfbfd', borderTop: '1px solid var(--card-border)', borderBottom: '1px solid var(--card-border)', padding: '72px 0' }}>
         <div style={{ maxWidth: 780 }}>
           <Reveal as="h2" delay={0}>
-            <span style={{ ...h2, display: 'block' }}>Nati a Monza,<br />da un problema stupido.</span>
+            <span style={{ ...h2, display: 'block' }}>{COPY.landingIdentityTitle}</span>
           </Reveal>
           <Reveal delay={100}>
             <p style={{ ...lead, marginTop: 24 }}>
-              Cercare un professionista in Brianza significava telefonare a caso, aspettare, sperare.
-              Abbiamo costruito il sistema che avremmo voluto avere noi: <strong style={{ color: 'var(--text)', fontWeight: 600 }}>uno, diretto, che risponde</strong>.
+              {COPY.landingIdentity1}
             </p>
           </Reveal>
           <Reveal delay={180}>
             <p style={{ ...lead, marginTop: 14 }}>
-              Non vendiamo niente a chi cerca. Lavoriamo con i professionisti della zona,
-              che pagano solo quando portano valore.
+              {COPY.landingIdentity2}
             </p>
           </Reveal>
         </div>
@@ -149,8 +147,8 @@ export default async function LandingPage() {
       {/* 7 — DUE PORTE */}
       <section style={{ display: 'grid', gap: 16, gridTemplateColumns: 'repeat(auto-fit,minmax(280px,1fr))', paddingBottom: 64 }}>
         {[
-          { t: 'Hai un problema', d: 'Una frase, 30 secondi. Guardare è libero, contattare è tua scelta.', cta: 'Racconta cosa ti serve', href: '/', primary: true },
-          { t: 'Sei un professionista', d: 'Richieste già capite, dalla tua zona. Si paga solo quando porta un cliente.', cta: 'Entra nella rete', href: '/partner', primary: false },
+          { ...COPY.doorUser, href: '/', primary: true },
+          { ...COPY.doorPartner, href: '/partner', primary: false },
         ].map((x, i) => (
           <Reveal key={x.t} delay={i * 120}>
             <div className="card" style={{ padding: 28, height: '100%', display: 'flex', flexDirection: 'column', gap: 10 }}>
@@ -166,13 +164,13 @@ export default async function LandingPage() {
 
       {/* 8 — CHIUSA */}
       <section style={{ textAlign: 'center', padding: '56px 0 72px', borderTop: '1px solid var(--card-border)' }}>
-        <Reveal as="h2" delay={0}><span style={{ ...h2, display: 'block' }}>Il prossimo problema<br />lo risolvi in una frase.</span></Reveal>
+        <Reveal as="h2" delay={0}><span style={{ ...h2, display: 'block' }}>{COPY.landingCloseTitle}</span></Reveal>
         <Reveal delay={120}>
           <div style={{ marginTop: 28 }}>
-            <Link href="/" className="btn" style={{ borderRadius: 999, padding: '15px 42px', fontSize: 16 }}>Inizia</Link>
+            <Link href="/" className="btn" style={{ borderRadius: 999, padding: '15px 42px', fontSize: 16 }}>{COPY.ctaStart}</Link>
           </div>
           <p style={{ fontSize: 13, color: 'var(--muted)', marginTop: 18 }}>
-            Domande? <a href="mailto:infostrobe5@gmail.com" style={{ color: 'var(--text)' }}>infostrobe5@gmail.com</a>
+            {COPY.landingCloseSub} · <a href="mailto:infostrobe5@gmail.com" style={{ color: 'var(--text)' }}>infostrobe5@gmail.com</a>
           </p>
         </Reveal>
       </section>

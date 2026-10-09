@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import AutoRotateGallery from '@/components/AutoRotateGallery';
+import { COPY } from '@/lib/copy';
 
 interface QualResult {
   success: boolean;
@@ -111,9 +112,9 @@ export default function HomePage() {
   return (
     <div>
       <div className="hero">
-        <span className="hero-eyebrow">Geo-match · Routing istantaneo · Waterfall 15 min</span>
-        <h1>Il professionista giusto, vicino a te.</h1>
-        <p>Descrivi il problema in parole tue. Troviamo lo specialista più vicino e disponibile.</p>
+        <span className="hero-eyebrow">{COPY.homeEyebrow}</span>
+        <h1>{COPY.homeH1}</h1>
+        <p>{COPY.homeSub}</p>
         {/* Sistema automatizzato — 4 foto che girano da sole, sempre aggiornate */}
         <div style={{ marginTop: 16 }}>
           <AutoRotateGallery seeds={['photo-1585704032915-c3400ca199e7', 'photo-1534438327276-14e5300c3a48', 'photo-1560066984-138dadb4c035', 'photo-1581578731548-c64695cc6952']} intervalMs={3500} />
