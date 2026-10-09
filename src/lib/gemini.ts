@@ -70,6 +70,12 @@ function fallbackQualify(prompt: string): Qualification {
     if (service === 'generico' && /lavaggio auto|lustrare auto/.test(lower)) service = 'lavaggio-auto';
     if (service === 'generico' && /anziano|nonno|nonna|badante/.test(lower)) service = 'assistenza-anziani';
     if (service === 'generico' && /accompagnamento|visite mediche anziano/.test(lower)) service = 'accompagnamento-anziani';
+    // Bancario
+    if (service === 'generico' && /mutuo|surroga|prima casa/.test(lower)) service = 'mutui';
+    if (service === 'generico' && /assicurazion|polizza|rc auto/.test(lower)) service = 'assicurazioni';
+    if (service === 'generico' && /prestito|finanziamento|cessione del quinto/.test(lower)) service = 'prestiti';
+    if (service === 'generico' && /consulente finanziario|investiment|risparmio|pensione complementare/.test(lower)) service = 'consulenza-finanziaria';
+    if (service === 'generico' && /banca|filiale|conto corrente|bancomat|assegno/.test(lower)) service = 'banca';
   }
   const urgency: Qualification['urgency'] = /urgen|subito|perdita|allag|gas|scossa|bloccato|rottura/.test(lower)
     ? 'high'

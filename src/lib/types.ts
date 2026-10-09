@@ -95,4 +95,10 @@ export const SERVICE_CATALOG = [
   'accompagnamento-anziani',
   'canalizzazione',
   'termoidraulica',
+  // Bancario
+  'banca',
+  'mutui',
+  'assicurazioni',
+  'consulenza-finanziaria',
+  'prestiti',
 ] as const;

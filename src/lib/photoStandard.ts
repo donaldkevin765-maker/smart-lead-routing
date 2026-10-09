@@ -98,6 +98,12 @@ export const SERVICE_COVER: Record<string, string> = {
   'accompagnamento-anziani': 'photo-1559839734-2b71ea197ec2',
   canalizzazione: 'photo-1585704032915-c3400ca199e7',
   termoidraulica: 'photo-1607472586893-edb57bdc0e39',
+  // BANCARIO (foto verificate HTTP 200)
+  banca: 'photo-1567427017947-545c5f8d16ad',
+  mutui: 'photo-1560520653-9e0e4c89eb11',
+  assicurazioni: 'photo-1554224155-6726b3ff858f',
+  'consulenza-finanziaria': 'photo-1526304640581-d334cdbbf45e',
+  prestiti: 'photo-1579621970563-ebec7560ff3e',
 };
 
 export function coverFor(services: string[]): string {
@@ -193,6 +199,14 @@ export const PHOTO_TAGS: Record<string, string[]> = {
   'photo-1493238792000-8113da705763': ['lavaggio auto', 'auto', 'lucida'],
   'photo-1516307365426-bea591f05011': ['assistenza anziani', 'nonno', 'cura'],
   'photo-1559839734-2b71ea197ec2': ['accompagnamento', 'anziani', 'cura', 'infermiere'],
+  // BANCARIO — tag SEO per rankPhotos
+  'photo-1567427017947-545c5f8d16ad': ['banca', 'filiale', 'sportello'],
+  'photo-1560520653-9e0e4c89eb11': ['mutuo', 'casa', 'chiavi', 'mutui'],
+  'photo-1554224155-6726b3ff858f': ['assicurazione', 'polizza', 'conto'],
+  'photo-1526304640581-d334cdbbf45e': ['consulenza', 'finanziaria', 'risparmio', 'investimenti'],
+  'photo-1579621970563-ebec7560ff3e': ['prestito', 'finanziamento', 'soldi'],
+  'photo-1450101499163-c8848c66ca85': ['consulenza', 'scrittura', 'contratto'],
+  'photo-1611974789855-9c2a0a7236a3': ['investimenti', 'finanza', 'grafici'],
 };
 
 export function rankPhotos(ids: string[], query: string): string[] {

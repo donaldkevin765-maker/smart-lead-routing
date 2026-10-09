@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation';
 import { getSupabaseServer } from '@/lib/supabase';
 import UltraImage from '@/components/UltraImage';
 import PartnerContactBox from '@/components/PartnerContactBox';
+import ReviewBox from '@/components/ReviewBox';
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -135,6 +136,9 @@ export default async function PartnerPage({ params }: { params: Promise<{ id: st
 
       {/* Spazio comunicazione — scrivi cosa ti serve, AI/bot categorizza in base a cosa gli serve */}
       <PartnerContactBox partnerId={p.id} service={p.services_offered[0]} />
+
+      {/* Recensioni: copiate dalle loro pagine + i nostri clienti votano qui */}
+      <ReviewBox partnerId={p.id} />
 
       {/* Info nostre — in fondo alla pagina standard */}
       <div className="card" style={{ background: '#fbfbfd', borderStyle: 'dashed' }}>
