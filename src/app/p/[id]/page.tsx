@@ -24,6 +24,11 @@ export default async function PartnerPage({ params }: { params: Promise<{ id: st
   // Personalizzazione partner: logo, colore, descrizione, foto sue — fallback standard STROBE ordinato
   const brand = p.brand_color || '#0071e3';
 
+  // Recensioni per JSON-LD (Google rich results: aggregateRating + Review)
+  const { data: revRows } = await sb.from('reviews').select('author_name,rating,comment,created_at,source').eq('partner_id', p.id).order('created_at', { ascending: false }).limit(10);
+  const revs = (revRows || []) as { author_name: string; rating: number; comment: string; created_at: string; source: string }[];
+  const avgRating = revs.length ? Math.round((revs.reduce((s, r) => s + r.rating, 0) / revs.length) * 10) / 10 : 0;
+
   // Simili: stesso servizio, stesso standard
   const { data: similari } = await sb.from('partners').select('id,name,services_offered,rating,is_verified').contains('services_offered', [p.services_offered[0]]).neq('id', p.id).limit(3);
   const simili = (similari || []) as { id: string; name: string; services_offered: string[]; rating: number; is_verified: boolean }[];
@@ -36,7 +41,17 @@ export default async function PartnerPage({ params }: { params: Promise<{ id: st
 
   return (
     <div>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({ '@context': 'https://schema.org', '@type': 'LocalBusiness', name: p.name, email: p.email, telephone: p.phone, aggregateRating: { '@type': 'AggregateRating', ratingValue: p.rating, reviewCount: 10 } }) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
+        '@context': 'https://schema.org', '@type': 'LocalBusiness', name: p.name, email: p.email, telephone: p.phone,
+        ...(revs.length ? {
+          aggregateRating: { '@type': 'AggregateRating', ratingValue: avgRating, reviewCount: revs.length },
+          review: revs.map((r) => ({
+            '@type': 'Review', author: { '@type': 'Person', name: r.author_name },
+            reviewRating: { '@type': 'Rating', ratingValue: r.rating, bestRating: 5, worstRating: 1 },
+            reviewBody: r.comment, datePublished: r.created_at.slice(0, 10),
+          })),
+        } : {}),
+      }) }} />
       {/* Breadcrumb */}
       <p className="muted" style={{ fontSize: 12, margin: '8px 0 0' }}>
         <a href="/" style={{ color: 'var(--muted)' }}>Home</a> · <a href="/problemi" style={{ color: 'var(--muted)' }}>Problemi</a> · <span style={{ color: 'var(--text)' }}>{p.name}</span>
