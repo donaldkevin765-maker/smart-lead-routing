@@ -107,7 +107,7 @@ export default function AdminPartners() {
                     <span className="muted" style={{ fontSize: 12 }}>{p.id.slice(0, 8)} · {new Date(p.created_at).toLocaleDateString('it-IT')}</span>
                   </td>
                   <td style={{ fontSize: 13 }}>
-                    {p.email}<br />{p.phone}<br />
+                    {p.email}<br />{p.phone || '—'}<br />
                     <span className="muted">{p.telegram_chat_id ? `TG: ${p.telegram_chat_id}` : 'TG: —'}</span>
                   </td>
                   <td style={{ fontSize: 13 }}>{p.services_offered.join(', ')}</td>

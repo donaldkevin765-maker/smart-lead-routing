@@ -19,7 +19,7 @@ export default async function PartnerPage({ params }: { params: Promise<{ id: st
   const sb = getSupabaseServer();
   const { data } = await sb.from('partners').select('*').eq('id', id).single();
   const p = data as {
-    id: string; name: string; email: string; phone: string; services_offered: string[]; rating: number; is_verified: boolean; is_active: boolean; credits: number; coverage_radius_km: number; created_at: string; availability: Record<string, string[]> | null; location: string; logo_url: string | null; brand_color: string | null; description: string | null; photos: string[] | null;
+    id: string; name: string; email: string; phone: string | null; services_offered: string[]; rating: number; is_verified: boolean; is_active: boolean; credits: number; coverage_radius_km: number; created_at: string; availability: Record<string, string[]> | null; location: string; logo_url: string | null; brand_color: string | null; description: string | null; photos: string[] | null;
   } | null;
   if (!p) notFound();
   // WHY: 202 schede in coda non sono ancora nostri clienti — non escono a Google né ai visitatori.
@@ -51,7 +51,7 @@ export default async function PartnerPage({ params }: { params: Promise<{ id: st
   return (
     <div>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
-        '@context': 'https://schema.org', '@type': 'LocalBusiness', name: p.name, email: p.email, telephone: p.phone,
+        '@context': 'https://schema.org', '@type': 'LocalBusiness', name: p.name, email: p.email, ...(p.phone ? { telephone: p.phone } : {}),
         ...(revs.length ? {
           aggregateRating: { '@type': 'AggregateRating', ratingValue: avgRating, reviewCount: revs.length },
           review: revs.map((r) => ({
@@ -79,9 +79,9 @@ export default async function PartnerPage({ params }: { params: Promise<{ id: st
           {p.services_offered.map((s) => <span key={s} className="chip on" style={{ marginRight: 6, borderColor: brand, color: brand }}>{s}</span>)} · Raggio {p.coverage_radius_km}km · Monza Brianza
         </p>
         {p.description && <p style={{ margin: '10px 0 0', fontSize: 14, lineHeight: 1.5 }}>{p.description}</p>}
-        {/* Contatti sotto logo — telefono cliccabile per chiamare subito */}
+        {/* Contatti sotto logo — telefono cliccabile (se pubblicato) */}
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12, marginTop: 12, fontSize: 13, background: '#fff', border: '1px solid var(--card-border)', borderRadius: 12, padding: '10px 14px' }}>
-          <a href={`tel:${p.phone.replace(/\s/g, '')}`} style={{ textDecoration: 'none', color: 'var(--text)', fontWeight: 600 }}>📞 {p.phone}</a>
+          {p.phone && <a href={`tel:${p.phone.replace(/\s/g, '')}`} style={{ textDecoration: 'none', color: 'var(--text)', fontWeight: 600 }}>📞 {p.phone}</a>}
           <span>✉️ {p.email}</span>
           <span>📍 Monza Brianza · {p.coverage_radius_km}km</span>
           <span>🕒 Verificato STROBE</span>
@@ -107,7 +107,7 @@ export default async function PartnerPage({ params }: { params: Promise<{ id: st
           <h2 style={{ marginTop: 0 }}>Dati fondamentali</h2>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, fontSize: 14 }}>
             <div><span className="muted">Servizi</span><br /><strong>{p.services_offered.join(', ')}</strong></div>
-            <div><span className="muted">Telefono</span><br /><a href={`tel:${p.phone.replace(/\s/g, '')}`} style={{ color: 'var(--text)', fontWeight: 600, textDecoration: 'none' }}>{p.phone}</a></div>
+            <div><span className="muted">Telefono</span><br />{p.phone ? <a href={`tel:${p.phone.replace(/\s/g, '')}`} style={{ color: 'var(--text)', fontWeight: 600, textDecoration: 'none' }}>{p.phone}</a> : <span className="muted">Via richiesta STROBE</span>}</div>
             <div><span className="muted">Email</span><br /><strong style={{ wordBreak: 'break-all' }}>{p.email}</strong></div>
             <div><span className="muted">Disponibilità</span><br /><strong>Verificata STROBE · {p.credits} crediti</strong></div>
           </div>
