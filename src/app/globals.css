@@ -32,6 +32,8 @@
 html {
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+  /* niente scroll orizzontale fantasma su mobile */
+  overflow-x: hidden;
 }
 
 body {
@@ -210,7 +212,12 @@ img { border-radius: var(--radius-sm); }
 
 /* — Layout righe — */
 .row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-@media (max-width: 640px) { .row { grid-template-columns: 1fr; } }
+@media (max-width: 640px) {
+  .row { grid-template-columns: 1fr; }
+  .nav-links a { margin-left: 14px; font-size: 14px; }
+  .container { padding: 0 16px 60px; }
+  body { font-size: 16px; }
+}
 
 /* — Badge urgenza — */
 .badge {

@@ -16,7 +16,13 @@ export function middleware(req: NextRequest) {
     return new NextResponse('Operazione riservata', { status: 403, headers: { 'X-Robots-Tag': 'noindex' } });
   }
 
-  if (!pathname.startsWith('/admin')) return NextResponse.next();
+  // WHY nascosto: /admin non esiste più (404 silenzioso) — il pannello è su un path
+  // non pubblicizzabile. Chi indovina il path serve comunque il token doppio.
+  if (pathname.startsWith('/admin')) {
+    return new NextResponse(null, { status: 404, headers: { 'X-Robots-Tag': 'noindex' } });
+  }
+
+  if (!pathname.startsWith('/pannello-')) return NextResponse.next();
 
   const token = process.env.ADMIN_TOKEN || '';
   if (!token) return NextResponse.next();
@@ -25,17 +31,15 @@ export function middleware(req: NextRequest) {
   if (got === token) {
     const res = NextResponse.next();
     res.headers.set('X-Robots-Tag', 'noindex, nofollow');
-    // WHY: setta il cookie così le fetch admin (/api/partners PATCH) lo passano da sole
+    // WHY: setta il cookie così le fetch del pannello (/api/partners PATCH) lo passano da sole
     res.cookies.set('admin_token', token, { httpOnly: true, sameSite: 'lax', path: '/' });
     return res;
   }
 
-  return new NextResponse('Admin riservato — area a parte, solo tu', {
-    status: 401,
-    headers: { 'WWW-Authenticate': 'Basic realm="STROBE Admin"', 'X-Robots-Tag': 'noindex, nofollow' },
-  });
+  // Stesso identico trattamento del vecchio 404: niente indizi su cosa sia questa pagina
+  return new NextResponse(null, { status: 404, headers: { 'X-Robots-Tag': 'noindex' } });
 }
 
 export const config = {
-  matcher: ['/admin/:path*', '/api/admin/:path*', '/api/services'],
+  matcher: ['/admin/:path*', '/pannello-q7x2/:path*', '/pannello-q7x2', '/api/admin/:path*', '/api/services'],
 };

@@ -101,11 +101,12 @@ export default async function PartnerPage({ params }: { params: Promise<{ id: st
       </div>
       <p className="muted" style={{ fontSize: 11, marginTop: 6 }}>Ultra-realistiche fino a 8K — qualità massima se il dispositivo lo consente, senza intaccare</p>
 
-      {/* Struttura completa a 2 colonne */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 0.8fr', gap: 16, marginTop: 16 }}>
+      {/* Struttura completa a 2 colonne — 1 colonna su mobile */}
+      <style>{`@media(max-width:767px){.strobe-cols{grid-template-columns:1fr!important}.strobe-dati{grid-template-columns:1fr!important}}`}</style>
+      <div className="strobe-cols" style={{ display: 'grid', gridTemplateColumns: '1.2fr 0.8fr', gap: 16, marginTop: 16 }}>
         <div className="card" style={{ marginTop: 0 }}>
           <h2 style={{ marginTop: 0 }}>Dati fondamentali</h2>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, fontSize: 14 }}>
+          <div className="strobe-dati" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, fontSize: 14 }}>
             <div><span className="muted">Servizi</span><br /><strong>{p.services_offered.join(', ')}</strong></div>
             <div><span className="muted">Telefono</span><br />{p.phone ? <a href={`tel:${p.phone.replace(/\s/g, '')}`} style={{ color: 'var(--text)', fontWeight: 600, textDecoration: 'none' }}>{p.phone}</a> : <span className="muted">Via richiesta STROBE</span>}</div>
             <div><span className="muted">Email</span><br /><strong style={{ wordBreak: 'break-all' }}>{p.email}</strong></div>

@@ -44,7 +44,7 @@ export function PartnerQuick({ initial }: { initial: P[] }) {
       </div>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 8, maxHeight: 420, overflowY: 'auto' }}>
         {shown.map((p) => (
-          <div key={p.id} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '9px 12px', borderRadius: 12, border: '1px solid var(--line)', background: '#fff' }}>
+          <div key={p.id} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '9px 12px', borderRadius: 12, border: '1px solid var(--line)', background: '#fff', flexWrap: 'wrap' }}>
             <span style={{ flex: 1, fontSize: 14, fontWeight: 560, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{p.name}</span>
             <span style={{ fontSize: 12, color: 'var(--muted)' }}>{p.credits} cr</span>
             <button style={{ ...btn, color: p.is_verified ? '#34c759' : '#86868b' }} disabled={busy === p.id} onClick={() => patch(p.id, { is_verified: !p.is_verified })}>

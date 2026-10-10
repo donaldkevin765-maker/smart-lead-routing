@@ -17,8 +17,8 @@ export default function AdminLeads() {
       for (const p of sb.partners as { id: string; name: string }[]) map[p.id] = p.name;
       setPartners(map);
     }
-    // Leads diretti da Supabase via API leads? Usiamo fetch diretto con service via /api/admin/leads
-    const r = await fetch('/api/admin/leads');
+    // Leads diretti da Supabase via API leads? Usiamo fetch diretto con service via /api/pannello-q7x2/leads
+    const r = await fetch('/api/pannello-q7x2/leads');
     const j = await r.json();
     if (j.success) {
       setLeads(j.leads);
@@ -30,7 +30,7 @@ export default function AdminLeads() {
   return (
     <div>
       <div className="card" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <span className="muted"><a href="/admin/partners">← Partner</a> · <a href="/admin/verticals">Verticali</a> · <strong>Audit trail lead</strong></span>
+        <span className="muted"><a href="/pannello-q7x2/partners">← Partner</a> · <a href="/pannello-q7x2/verticals">Verticali</a> · <strong>Audit trail lead</strong></span>
         <button className="btn btn-secondary" onClick={load} style={{ padding: '6px 14px', fontSize: 13 }}>Aggiorna</button>
       </div>
 

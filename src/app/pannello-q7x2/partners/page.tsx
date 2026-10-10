@@ -38,13 +38,13 @@ export default function AdminPartners() {
     load();
   }
   async function verify(p: PartnerRow) {
-    await fetch('/api/admin/partners', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ partnerId: p.id, is_verified: !p.is_verified }) });
+    await fetch('/api/pannello-q7x2/partners', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ partnerId: p.id, is_verified: !p.is_verified }) });
     load();
   }
   async function recharge(p: PartnerRow) {
     const delta = parseInt(creditsDelta[p.id] || '0', 10);
     if (!delta) return;
-    await fetch('/api/admin/partners', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ partnerId: p.id, creditsDelta: delta }) });
+    await fetch('/api/pannello-q7x2/partners', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ partnerId: p.id, creditsDelta: delta }) });
     setCreditsDelta({ ...creditsDelta, [p.id]: '' });
     load();
   }
@@ -61,7 +61,7 @@ export default function AdminPartners() {
   return (
     <div>
       <div className="card" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 8 }}>
-        <span className="muted"><a href="/admin/partners">Partner</a> · <a href="/admin/verticals">Verticali</a> · <a href="/admin/leads">Audit trail</a></span>
+        <span className="muted"><a href="/pannello-q7x2/partners">Partner</a> · <a href="/pannello-q7x2/verticals">Verticali</a> · <a href="/pannello-q7x2/leads">Audit trail</a></span>
         <span className="muted" style={{ fontSize: 12 }}>Admin — solo per te</span>
       </div>
 

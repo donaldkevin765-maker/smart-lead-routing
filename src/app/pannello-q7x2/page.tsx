@@ -31,9 +31,9 @@ export default async function AdminHome() {
   ];
 
   const links = [
-    { href: '/admin/leads', t: 'Lead', d: 'Accettati, scaduti, in attesa' },
-    { href: '/admin/partners', t: 'Schede complete', d: 'Tutti i campi, email e contatti' },
-    { href: '/admin/verticals', t: 'Catalogo', d: 'Verticali e servizi' },
+    { href: '/pannello-q7x2/leads', t: 'Lead', d: 'Accettati, scaduti, in attesa' },
+    { href: '/pannello-q7x2/partners', t: 'Schede complete', d: 'Tutti i campi, email e contatti' },
+    { href: '/pannello-q7x2/verticals', t: 'Catalogo', d: 'Verticali e servizi' },
     { href: '/partner', t: 'Vista pubblica', d: 'Come appare il form ai partner' },
   ];
 
