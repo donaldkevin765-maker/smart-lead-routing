@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getSupabaseServer } from '@/lib/supabase';
 import { isRateLimited } from '@/lib/rateLimit';
+import { sendEmail, welcomePartnerHtml } from '@/lib/resend';
 
 // WHY: il GET è pubblico (usa /clienti) ma NON può esporre email/telefoni/telegram
 // di 211 aziende — altrimenti chiunque scarica l'anagrafica. I contatti li vede solo
@@ -93,6 +94,9 @@ export async function POST(req: Request) {
       throw new Error('Creazione non disponibile');
     }
     if (!data) return NextResponse.json({ success: false, error: 'Creazione non disponibile' }, { status: 500 });
+    // WHY: benvenuto automatico — il partner capisce subito come funziona, senza attese.
+    // Best-effort: se l'email fallisce la registrazione resta valida lo stesso.
+    void sendEmail({ to: email.trim(), subject: 'Benvenuto in STROBE — come funziona', html: welcomePartnerHtml(name.trim()) });
     return NextResponse.json({ success: true, id: (data as { id: string }).id });
   } catch (e) {
     return NextResponse.json({ success: false, error: (e as Error).message }, { status: 500 });

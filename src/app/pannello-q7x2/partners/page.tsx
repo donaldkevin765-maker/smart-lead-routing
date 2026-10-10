@@ -74,6 +74,13 @@ export default function AdminPartners() {
     setMsg('Partner eliminato');
     load();
   }
+  async function invite(p: PartnerRow) {
+    if (!confirm(`Manda l'invito personalizzato a "${p.name}"?\n\nSolo dopo che lo hai contattato di persona — l'email chiude il cerchio, non lo apre.`)) return;
+    setMsg('Invio invito…');
+    const r = await fetch('/api/admin/invite', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ partnerId: p.id }) });
+    const j = await r.json();
+    setMsg(j.success ? `Invito inviato a ${p.email} ✓` : `Invito non partito: ${j.error}`);
+  }
 
   const filtered = partners.filter((p) => {
     const hay = `${p.name} ${p.email} ${p.phone} ${p.services_offered.join(' ')}`.toLowerCase();
@@ -173,6 +180,7 @@ export default function AdminPartners() {
                     <button className="btn btn-secondary" onClick={() => toggle(p)} style={{ padding: '6px 14px', fontSize: 12 }}>{p.is_active ? 'Pausa' : 'Riattiva'}</button>
                     <button className="btn btn-secondary" onClick={() => verify(p)} style={{ padding: '6px 14px', fontSize: 12 }}>{p.is_verified ? 'Togli verifica' : 'Verifica'}</button>
                     <button className="btn btn-secondary" onClick={() => startEdit(p)} style={{ padding: '6px 14px', fontSize: 12 }}>Modifica</button>
+                    {!p.is_active && <button className="btn btn-secondary" onClick={() => invite(p)} style={{ padding: '6px 14px', fontSize: 12 }}>📧 Invita</button>}
                     <button onClick={() => remove(p)} style={{ padding: '6px 8px', fontSize: 12, background: 'none', border: 0, color: 'var(--danger)', cursor: 'pointer', fontWeight: 600 }}>Elimina</button>
                   </td>
                 </tr>
