@@ -1,4 +1,5 @@
 import { Resend } from 'resend';
+import { sendViaGmail, gmailConfigured } from './mailer';
 
 let client: Resend | null = null;
 
@@ -10,10 +11,12 @@ function getClient(): Resend | null {
 }
 
 export function resendConfigured(): boolean {
-  return Boolean(process.env.RESEND_API_KEY);
+  return gmailConfigured() || Boolean(process.env.RESEND_API_KEY);
 }
 
 export async function sendEmail(opts: { to: string; subject: string; html: string }): Promise<boolean> {
+  // PRIORITÀ: Gmail (gratis, sempre attivo) → Resend (solo se in futuro compri un provider)
+  if (gmailConfigured()) return sendViaGmail(opts);
   const c = getClient();
   if (!c) return false;
   try {
