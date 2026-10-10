@@ -10,9 +10,9 @@ export async function POST() {
       headers: secret ? { Authorization: `Bearer ${secret}` } : {},
       cache: 'no-store',
     });
-    const j = (await r.json()) as { success?: boolean; sent?: number; deactivated?: number; error?: string };
+    const j = (await r.json()) as { success?: boolean; sent?: number; deactivated?: number; checked?: number; error?: string };
     if (!j.success) return NextResponse.json({ success: false, error: j.error || 'Recap non partiti' }, { status: 500 });
-    return NextResponse.json({ success: true, sent: j.sent, deactivated: j.deactivated });
+    return NextResponse.json({ success: true, sent: j.sent, deactivated: j.deactivated, checked: j.checked });
   } catch (e) {
     return NextResponse.json({ success: false, error: (e as Error).message }, { status: 500 });
   }

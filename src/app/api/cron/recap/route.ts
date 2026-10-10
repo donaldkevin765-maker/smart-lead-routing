@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getSupabaseServer } from '@/lib/supabase';
-import { sendEmail } from '@/lib/resend';
+import { sendEmail, resendConfigured } from '@/lib/resend';
 
 export const dynamic = 'force-dynamic';
 
@@ -44,6 +44,11 @@ function recapHtml(name: string, stats: { ricevuti: number; accettati: number; s
 export async function GET(req: Request) {
   if (!(await auth(req))) return NextResponse.json({ success: false, error: 'Non autorizzato' }, { status: 401 });
 
+  // WHY guard: senza email funzionanti NON disattiviamo nessuno — non avrebbero mai ricevuto
+  // l'avviso di scadenza. Meglio zero recap che un disattivazione a tradimento.
+  if (!resendConfigured())
+    return NextResponse.json({ success: false, error: 'RESEND_API_KEY non configurata — recap e disattivazioni sospesi' }, { status: 503 });
+
   const sb = getSupabaseServer();
   const now = new Date();
   const weekAgo = new Date(now.getTime() - 7 * 86400000).toISOString();
@@ -74,15 +79,16 @@ export async function GET(req: Request) {
 
     const crediti = Number(p.credits || 0);
     let deadlineDays: number | null = null;
+    let setDeadline: string | null = null; // scadenza da scrivere SOLO dopo invio riuscito
 
     if (crediti <= 0) {
       if (!p.deactivate_after) {
-        // Primo warning: 14 giorni di grazia
-        const dl = new Date(now.getTime() + 14 * 86400000).toISOString();
-        await sb.from('partners').update({ deactivate_after: dl }).eq('id', p.id);
+        // Primo warning: 14 giorni di grazia (scritti dopo l'invio — vedi sotto)
+        setDeadline = new Date(now.getTime() + 14 * 86400000).toISOString();
         deadlineDays = 14;
       } else if (new Date(p.deactivate_after) < now) {
-        // Scadenza superata → fuori dal sistema (riattivabile basta ricaricare)
+        // Scadenza superata → fuori dal sistema (riattivabile basta ricaricare).
+        // WHY si disattiva anche senza email: la scadenza era già stata AVVISATA nelle scorse settimane
         await sb.from('partners').update({ is_active: false }).eq('id', p.id);
         deactivated++;
         continue;
@@ -94,13 +100,19 @@ export async function GET(req: Request) {
       await sb.from('partners').update({ deactivate_after: null }).eq('id', p.id);
     }
 
-    if (p.email && (await sendEmail({
+    const ok = p.email && (await sendEmail({
       to: p.email,
       subject: `Il tuo riepilogo STROBE — ${stats.ricevuti} richieste questa settimana`,
       html: recapHtml(p.name, stats, crediti, p.rating, deadlineDays),
-    }))) sent++;
-
-    await sb.from('partners').update({ last_recap_at: now.toISOString() }).eq('id', p.id);
+    }));
+    if (ok) {
+      sent++;
+      // WHY SOLO qui: se l'email non è arrivata, il partner non sa della scadenza —
+      // avviare un countdown invisibile = disattivazione a tradimento. Mai.
+      if (setDeadline) await sb.from('partners').update({ deactivate_after: setDeadline }).eq('id', p.id);
+      // last_recap_at solo con invio riuscito: al prossimo giro riprova
+      await sb.from('partners').update({ last_recap_at: now.toISOString() }).eq('id', p.id);
+    }
   }
 
   return NextResponse.json({ success: true, sent, deactivated, checked: (partners || []).length });

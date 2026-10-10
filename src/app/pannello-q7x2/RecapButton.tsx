@@ -12,7 +12,10 @@ export function RecapButton() {
     setState('run');
     const r = await fetch('/api/admin/recap', { method: 'POST' });
     const j = await r.json();
-    if (j.success) { setState('ok'); setInfo(`${j.sent || 0} recap inviati${j.deactivated ? `, ${j.deactivated} disattivati` : ''}`); }
+    if (j.success) {
+      if (j.checked > 0 && (j.sent || 0) === 0) { setState('err'); setInfo('Invii falliti — chiave email non valida o dominio non verificato (Resend)'); }
+      else { setState('ok'); setInfo(`${j.sent || 0} recap inviati${j.deactivated ? `, ${j.deactivated} disattivati` : ''}`); }
+    }
     else { setState('err'); setInfo(j.error || 'Errore'); }
   }
 
