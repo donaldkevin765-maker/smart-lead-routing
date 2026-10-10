@@ -17,8 +17,8 @@ export default function AdminLeads() {
       for (const p of sb.partners as { id: string; name: string }[]) map[p.id] = p.name;
       setPartners(map);
     }
-    // Leads diretti da Supabase via API leads? Usiamo fetch diretto con service via /api/pannello-q7x2/leads
-    const r = await fetch('/api/pannello-q7x2/leads');
+    // Leads diretti da Supabase via API leads? Usiamo fetch diretto con service via /api/admin/leads
+    const r = await fetch('/api/admin/leads');
     const j = await r.json();
     if (j.success) {
       setLeads(j.leads);

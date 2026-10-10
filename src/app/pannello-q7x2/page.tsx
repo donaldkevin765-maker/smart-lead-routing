@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { getSupabaseServer } from '@/lib/supabase';
 import { PartnerQuick } from './PartnerQuick';
+import { RecapButton } from './RecapButton';
 
 export const dynamic = 'force-dynamic';
 
@@ -32,7 +33,8 @@ export default async function AdminHome() {
 
   const links = [
     { href: '/pannello-q7x2/leads', t: 'Lead', d: 'Accettati, scaduti, in attesa' },
-    { href: '/pannello-q7x2/partners', t: 'Schede complete', d: 'Tutti i campi, email e contatti' },
+    { href: '/pannello-q7x2/partners', t: 'Schede complete', d: 'Modifica, elimina, crediti, verifica' },
+    { href: '/pannello-q7x2/recensioni', t: 'Recensioni', d: 'Incolla quelle vere, cancella spam' },
     { href: '/pannello-q7x2/verticals', t: 'Catalogo', d: 'Verticali e servizi' },
     { href: '/partner', t: 'Vista pubblica', d: 'Come appare il form ai partner' },
   ];
@@ -42,6 +44,7 @@ export default async function AdminHome() {
       <div>
         <p style={{ fontSize: 12, letterSpacing: '.14em', textTransform: 'uppercase', color: 'var(--accent)', fontWeight: 650, margin: 0 }}>Pannello</p>
         <h1 style={{ fontSize: 'clamp(26px,4vw,36px)', fontWeight: 700, letterSpacing: '-0.03em', margin: '6px 0 0' }}>Tutto il sito, una schermata</h1>
+        <div style={{ marginTop: 12 }}><RecapButton /></div>
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(150px,1fr))', gap: 12 }}>

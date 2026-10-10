@@ -25,6 +25,8 @@ export default function AdminPartners() {
   const [filterService, setFilterService] = useState('');
   const [msg, setMsg] = useState('');
   const [creditsDelta, setCreditsDelta] = useState<Record<string, string>>({});
+  const [editing, setEditing] = useState<PartnerRow | null>(null);
+  const [ef, setEf] = useState({ name: '', phone: '', services: '', description: '', radius: 15 });
 
   async function load() {
     const r = await fetch('/api/partners');
@@ -38,14 +40,38 @@ export default function AdminPartners() {
     load();
   }
   async function verify(p: PartnerRow) {
-    await fetch('/api/pannello-q7x2/partners', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ partnerId: p.id, is_verified: !p.is_verified }) });
+    await fetch('/api/admin/partners', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ partnerId: p.id, is_verified: !p.is_verified }) });
     load();
   }
   async function recharge(p: PartnerRow) {
     const delta = parseInt(creditsDelta[p.id] || '0', 10);
     if (!delta) return;
-    await fetch('/api/pannello-q7x2/partners', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ partnerId: p.id, creditsDelta: delta }) });
+    await fetch('/api/admin/partners', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ partnerId: p.id, creditsDelta: delta }) });
     setCreditsDelta({ ...creditsDelta, [p.id]: '' });
+    load();
+  }
+  function startEdit(p: PartnerRow) {
+    setEditing(p);
+    setEf({ name: p.name, phone: p.phone || '', services: p.services_offered.join(', '), description: '', radius: p.coverage_radius_km });
+  }
+  async function saveEdit() {
+    if (!editing) return;
+    await fetch('/api/admin/partners', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        partnerId: editing.id, name: ef.name, phone: ef.phone || null,
+        services_offered: ef.services.split(',').map((s) => s.trim()).filter(Boolean),
+        coverage_radius_km: ef.radius,
+      }),
+    });
+    setEditing(null);
+    setMsg('Scheda aggiornata ✓');
+    load();
+  }
+  async function remove(p: PartnerRow) {
+    if (!confirm(`Eliminare DEFINITIVAMENTE "${p.name}" e tutte le sue recensioni?`)) return;
+    await fetch(`/api/admin/partners?partnerId=${p.id}`, { method: 'DELETE' });
+    setMsg('Partner eliminato');
     load();
   }
 
@@ -61,7 +87,7 @@ export default function AdminPartners() {
   return (
     <div>
       <div className="card" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 8 }}>
-        <span className="muted"><a href="/pannello-q7x2/partners">Partner</a> · <a href="/pannello-q7x2/verticals">Verticali</a> · <a href="/pannello-q7x2/leads">Audit trail</a></span>
+        <span className="muted"><a href="/pannello-q7x2/partners">Partner</a> · <a href="/pannello-q7x2/verticals">Verticali</a> · <a href="/pannello-q7x2/leads">Audit trail</a> · <a href="/pannello-q7x2/recensioni">Recensioni</a></span>
         <span className="muted" style={{ fontSize: 12 }}>Admin — solo per te</span>
       </div>
 
@@ -83,6 +109,25 @@ export default function AdminPartners() {
         </div>
         <p className="muted" style={{ fontSize: 13 }}>{filtered.length} partner su {partners.length} — {filtered.filter((p)=>p.is_active).length} attivi</p>
       </div>
+
+      {/* Modifica scheda — panello compatto sotto la tabella */}
+      {editing && (
+        <div className="card" style={{ border: '2px solid var(--accent)' }}>
+          <h3 style={{ marginTop: 0 }}>Modifica: {editing.name}</h3>
+          <div className="row">
+            <div><label className="label">Nome</label><input className="input" value={ef.name} onChange={(e) => setEf({ ...ef, name: e.target.value })} /></div>
+            <div><label className="label">Telefono (vuoto = nessun numero)</label><input className="input" value={ef.phone} onChange={(e) => setEf({ ...ef, phone: e.target.value })} placeholder="+39 039..." /></div>
+          </div>
+          <div className="row">
+            <div><label className="label">Servizi (separati da virgola)</label><input className="input" value={ef.services} onChange={(e) => setEf({ ...ef, services: e.target.value })} placeholder="idraulica, fabbro" /></div>
+            <div><label className="label">Raggio (km)</label><input className="input" type="number" min={1} max={100} value={ef.radius} onChange={(e) => setEf({ ...ef, radius: Number(e.target.value) })} /></div>
+          </div>
+          <div style={{ display: 'flex', gap: 8, marginTop: 12 }}>
+            <button className="btn" style={{ borderRadius: 999 }} onClick={saveEdit}>Salva</button>
+            <button className="btn btn-secondary" style={{ borderRadius: 999 }} onClick={() => setEditing(null)}>Annulla</button>
+          </div>
+        </div>
+      )}
 
       <div className="card">
         <div style={{ overflowX: 'auto' }}>
@@ -127,6 +172,8 @@ export default function AdminPartners() {
                   <td style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
                     <button className="btn btn-secondary" onClick={() => toggle(p)} style={{ padding: '6px 14px', fontSize: 12 }}>{p.is_active ? 'Pausa' : 'Riattiva'}</button>
                     <button className="btn btn-secondary" onClick={() => verify(p)} style={{ padding: '6px 14px', fontSize: 12 }}>{p.is_verified ? 'Togli verifica' : 'Verifica'}</button>
+                    <button className="btn btn-secondary" onClick={() => startEdit(p)} style={{ padding: '6px 14px', fontSize: 12 }}>Modifica</button>
+                    <button onClick={() => remove(p)} style={{ padding: '6px 8px', fontSize: 12, background: 'none', border: 0, color: 'var(--danger)', cursor: 'pointer', fontWeight: 600 }}>Elimina</button>
                   </td>
                 </tr>
               ))}
